@@ -20,49 +20,49 @@ This course is aimed at researchers and technical workers who are or who will be
 
 ### Monday: DNA methylation analysis with short reads (Illumina WGBS and EM-Seq) – 2-7pm Berlin time
 
--    Presentation: Origin and evolution of DNA methylation in eukaryotes: from parasite defence to gene regulation.
--    Presentation: Introduction to short-read format and processing (WGBS/EM-Seq).
--    Lab 1: Short-read processing:
-o    QC, filtering, trimming
-o    Genome preparation
-o    Alignment, deduplication
+1. Presentation: Origin and evolution of DNA methylation in eukaryotes: from parasite defence to gene regulation.
+2. Presentation: Introduction to short-read format and processing (WGBS/EM-Seq).
+3. Lab 1: Short-read processing:
+* QC, filtering, trimming
+* Genome preparation
+* Alignment, deduplication
 
 ### Tuesday: DNA methylation analysis with short reads (Illumina WGBS and EM-Seq) – 2-7pm Berlin time
 
--    Presentation: Introduction to DNAm in plants.
--    Presentation: Population epigenomics: patterns and drivers of DNAm variation in natural populations.
--    Lab 2: Short-read processing:
-o    Conversion efficiencies (lambda/pUC19)
-o    Methylation count files
-o    Accounting for SNPs
+1. Presentation: Introduction to DNAm in plants.
+2. Presentation: Population epigenomics: patterns and drivers of DNAm variation in natural populations.
+3. Lab 2: Short-read processing:
+* Conversion efficiencies (lambda/pUC19)
+* Methylation count files
+* Accounting for SNPs
 
 ### Wednesday: DNA methylation analysis with long reads (Oxford Nanopore) – 2-7pm Berlin time
 
--    Presentation: Nuances of DNA methylation data: sex, tissue, age, imprinting and allelic-variation.
--    Presentation: Introduction to long-read format and processing (Nanopore/PacBio).
--    Lab 3: Nanopore long-read processing:
-o    Fast5/pod5 generation, Pod5 tools
-o    Dorado/Guppy, and models
-o    Modbam2bed/Modkit
-o    Example: methylation haplophasing
+1. Presentation: Nuances of DNA methylation data: sex, tissue, age, imprinting and allelic-variation.
+2. Presentation: Introduction to long-read format and processing (Nanopore/PacBio).
+3. Lab 3: Nanopore long-read processing:
+* Fast5/pod5 generation, Pod5 tools
+* Dorado/Guppy, and models
+* Modbam2bed/Modkit
+* Example: methylation haplophasing
 
 ### Thursday: Identification of differentially methylated sites and regions and integration with SNP data – 2-7pm Berlin time
 
--    Presentation: DNAm and genetic variation: biological insights and analytical hazards.
--    Presentation: Introduction to differential DNA methylation.
--    Lab 4: Differential DNA methylation:
-o    Testing for differentially methylated sites and regions between populations and conditions
-o    Visualising differential methylation
-o    Accounting for SNPs
+1. Presentation: DNAm and genetic variation: biological insights and analytical hazards.
+2. Presentation: Introduction to differential DNA methylation.
+3. Lab 4: Differential DNA methylation:
+* Testing for differentially methylated sites and regions between populations and conditions
+* Visualising differential methylation
+* Accounting for SNPs
 
 ### Friday: Integration of DNA methylation and gene expression and open session on your own data / experiments – 2-7pm Berlin time
--    Lab 5: Integration of DNA methylation and gene expression:
-o    Quantifying genes/exon/intron levels
-o    Correlational plots
-o    Overlap of differential methylation and differential expression
--    Open session: Group questions / discussion:
-o    Follow up on any course material
-o    Student questions on their own data / experimental plans
+1. Lab 5: Integration of DNA methylation and gene expression:
+* Quantifying genes/exon/intron levels
+* Correlational plots
+* Overlap of differential methylation and differential expression
+2. Open session: Group questions / discussion:
+* Follow up on any course material
+* Student questions on their own data / experimental plans
 
 ## Pre-course preparation
 
