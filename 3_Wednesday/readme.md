@@ -145,14 +145,18 @@ Here we will do a toy example:
 ```
 conda activate clair3
 
+echo -e "NC_088680.1\t70781301\t70886739" > locus.bed
+
 run_clair3.sh --bam_fn=F4_sorted.bam \
 --ref_fn=GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 --threads=2 --platform="ont" \
 --model_path=/home/ubuntu/miniconda3/envs/clair3/bin/models/ont \
---output=clair3_subset --enable_phasing --include_all_ctgs --bed_fn=/home/ubuntu/Share/3_Wednesday/rawdata/locus.bed
+--output=clair3_subset --enable_phasing --include_all_ctgs \
+--bed_fn=locus.bed
 
 ```
 
+The file `locus.bed` is simply to subset the variant calling to small region of the genome. Deleting this option would run it for all contigs/chromosomes, but that takes a long time, so no need for now.
 
 ## Phase your reads using WhatsHap
 
@@ -162,6 +166,10 @@ First you need to tag your haplogroups found with clair3
 
 ```
 conda activate whatshap
+
+samtools view -b F4_sorted.bam -L locus.bed > locus.bam
+samtools index locus.bam
+
 whatshap haplotag \
 --reference GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 clair3_subset/phased_merge_output.vcf.gz \
@@ -169,12 +177,13 @@ clair3_subset/phased_merge_output.vcf.gz \
 --skip-missing-contigs \
 --output-threads 2 \
  --ignore-read-groups \ 
-F4_sorted.bam
+locus.bam
 
 samtools index F4_sorted.locus_haplotagged.bam
 ```
-
 Now your reads for this locus will have a tag depending on the haplogroup they got assigned, the `HP:i:1` will be haplogroup 1, and `HP:i:2` will be haplogroup 2. 
+
+In a real case scenario, you would simply run this with a vcf file for all contigs without subseting your bam. 
 
 ## Use methylartist to visualize your locus of interest
 
