@@ -1,0 +1,7 @@
+samples:
+ pesticide_6_2: pesticide_6_2_trim_1.fq.gz
+ pesticide_7_5: pesticide_7_5_trim_1.fq.gz
+ pesticide_9_20: pesticide_9_20_trim_1.fq.gz
+ pristine_36_01: pristine_36_01_trim_1.fq.gz
+ pristine_53_01: pristine_53_01_trim_1.fq.gz
+ pristine_54_01: pristine_54_01_trim_1.fq.gz
