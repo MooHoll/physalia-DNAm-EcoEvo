@@ -50,12 +50,21 @@ This bam file contains your reads aligned to the reference genome, with the spec
 
 `samtools view F4_sorted.bam | head`
 
+In case you're curious, our reads belong to *Planococcus citri* (citrus mealybug).
+
 
 ## Base modification calling with ModKit
 
 Modkit is the latest methylation calling algorithm from Nanopore. Before they had modbam2bed, which was probably designed around Guppy outputs. However, both are still compatible.
 
-Modkis has several functions available, but we want **pileup**.
+Modkis has several functions available, one is a quick way to asses global methylation levels in the sampel. 
+
+```
+/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.4.3_d13b97d/modkit summary -t 2 F4_sorted.bam
+```
+This will give an overview of the bam file. 
+
+But what we really want is **pileup**.
 
 As with any softare, good to see options by doing: 
 `/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.4.3_d13b97d/modkit pileup`
@@ -79,6 +88,8 @@ If you had a plant genome or something with non-CG methylation, you could play w
 
 To understand the bedMethyl format, check modkit [github repo](https://github.com/nanoporetech/modkit?tab=readme-ov-file#bedmethyl-column-descriptions).
 
+## Visualizing your data in the genome browser
+
 Most important columns, 5 (coverage) and 11 (methylation fraction). Let's make two files to visualize in the genome browser. 
 ```
 cat F4_modkit.bedMethyl | awk '{print $1,$2,$3,$11}' OFS="\t" > F4_modkit.mCG.bedGraph
@@ -98,4 +109,73 @@ gzip -d GCF_950023065.1_ihPlaCitr1.1_genomic.fna.gz
 samtools faidx GCF_950023065.1_ihPlaCitr1.1_genomic.fna
 ```
 Then download IGV app from: [https://igv.org/doc/desktop/#DownloadPage/].
+
+## Visualizing the per-read methylation data with MethylArtist
+
+[MethylArtist](https://github.com/adamewing/methylartist) is a handy tool to visualize your reads on a certain genomic region.
+
+To get your data ready, you'll need the bam file, and perhaps an indexed gtf file. To index a gtf file do: 
+```
+gzip -d GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.gz | bgzip -c - > GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
+tabix -p gff GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
+```
+
+Methylartist can be installed via conda.
+
+```
+conda activate longreads
+methylartist region \
+-i NC_088681.1:36215487-36221147 \
+-b F4_sorted.bam \
+-r GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
+-n CG -m m --panelratios 1,2,1,1 \
+-o TestRegion.png \
+-g GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
+```
+
+Download the test region png file to your computer using `scp`.
+
+
+# Phased methylation calling
+
+## Call variants from your bam file
+If your long reads have enough covarage and have enough quality (R10 better than R9), you can try to call SNPs on your bam directly with [Clair3](https://github.com/HKU-BAL/Clair3?tab=readme-ov-file) or bcftools.
+
+Here we will do a toy example: 
+```
+conda activate clair3
+
+run_clair3.sh --bam_fn=F4_sorted.bam \
+--ref_fn=GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
+--threads=2 --platform="ont" \
+--model_path=/home/ubuntu/miniconda3/envs/clair3/bin/models/ont \
+--output=clair3_subset --enable_phasing --include_all_ctgs --bed_fn=/home/ubuntu/Share/3_Wednesday/rawdata/locus.bed
+
+```
+
+
+## Phase your reads using WhatsHap
+
+[Whatshap](https://whatshap.readthedocs.io/en/latest/) is a software designed to phase your long reads using a vcf reference. Install via pip works.
+
+First you need to tag your haplogroups found with clair3
+
+```
+conda activate whatshap
+whatshap haplotag \
+--reference GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
+clair3_subset/phased_merge_output.vcf.gz \
+-o F4_sorted.locus_haplotagged.bam \
+--skip-missing-contigs \
+--output-threads 2 \
+ --ignore-read-groups \ 
+F4_sorted.bam
+
+samtools index F4_sorted.locus_haplotagged.bam
+```
+
+Now your reads for this locus will have a tag depending on the haplogroup they got assigned, the `HP:i:1` will be haplogroup 1, and `HP:i:2` will be haplogroup 2. 
+
+
+
 
