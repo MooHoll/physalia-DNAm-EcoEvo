@@ -48,9 +48,11 @@ You will see there are lots of options for creating lots of different files depe
 ```
 bismark_methylation_extractor --multicore 3 --comprehensive --bedGraph --report --cytosine_report \
 --genome_folder TAIR10_genome/ <your_deduplicated>.bam
+
+bismark2report ./
 ```
 
-* Examine your M-bias plots by downloading the `.png` files to your computer
+* Examine your HTML report by downloading the `.html` files to your computer
 * Do you think you should run `methylation_extraction` again using the `--ignore` options?
 
 Once you are happy with your final extracted files these can be used for differential DNA methylation analyses in R (Day 4). 
@@ -63,6 +65,8 @@ We can run one more command which merges the calls across strands. As CpGs consi
 
 ```
 coverage2cytosine -o <file_name> --merge_CpGs --genome_folder TAIR10_genome/ <your_deduplicated>.bam
+
+bismark2report ./
 ```
 
 These merged coverage files can also go straight into the differential DNA methylation pipeline.
