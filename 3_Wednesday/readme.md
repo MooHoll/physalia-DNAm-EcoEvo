@@ -45,19 +45,3 @@ samtools index F4_sorted.bam
 ```
 
 If you have enough CPUs, you can always take advantage of that, using extra cores for samtools with `-@ 10`. 
-
-
-
-
-
-
-## Program
-
-### Monday: DNA methylation analysis with short reads (Illumina WGBS and EM-Seq) – 2-7pm Berlin time
-
-1. Presentation: Origin and evolution of DNA methylation in eukaryotes: from parasite defence to gene regulation.
-2. Presentation: Introduction to short-read format and processing (WGBS/EM-Seq).
-3. Lab 1: Short-read processing:
-* QC, filtering, trimming
-* Genome preparation
-* Alignment, deduplication
