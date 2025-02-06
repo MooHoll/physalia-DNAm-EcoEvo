@@ -77,14 +77,14 @@ This settings only focus on CpGs and combine information from Watson and Crick s
 
 If you had a plant genome or something with non-CG methylation, you could play with **--motif CHH 0** or **--motif CHG 0** (you would need to use a 5mC_5hmC model in dorado). 
 
-To understand the bedMethyl format, check modkit (github repo)[https://github.com/nanoporetech/modkit?tab=readme-ov-file#bedmethyl-column-descriptions].
+To understand the bedMethyl format, check modkit [github repo](https://github.com/nanoporetech/modkit?tab=readme-ov-file#bedmethyl-column-descriptions).
 
 Most important columns, 5 (coverage) and 11 (methylation fraction). Let's make two files to visualize in the genome browser. 
 ```
 cat F4_modkit.bedMethyl | awk '{print $1,$2,$3,$11}' OFS="\t" > F4_modkit.mCG.bedGraph
 cat F4_modkit.bedMethyl | awk '{print $1,$2,$3,$5}' OFS="\t" > F4_modkit.cov.bedGraph
 ```
-These files could be uploaded directly to the genome browser, but to keep it tidy and quick, let's binarise them into bigwig format, using the UCSC tool (bedGraphToBigWig)[https://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig].
+These files could be uploaded directly to the genome browser, but to keep it tidy and quick, let's binarise them into bigwig format, using the UCSC tool [bedGraphToBigWig](https://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig).
 
 ```
 /home/ubuntu/Share/3_Wednesday/software/bedGraphToBigWig F4_modkit.mCG.bedGraph /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa.fai F4_modkit.mCG.bigwig
@@ -97,5 +97,5 @@ wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/950/023/065/GCF_950023065.1_ih
 gzip -d GCF_950023065.1_ihPlaCitr1.1_genomic.fna.gz
 samtools faidx GCF_950023065.1_ihPlaCitr1.1_genomic.fna
 ```
-Then download IGV app from: (https://igv.org/doc/desktop/#DownloadPage/)[https://igv.org/doc/desktop/#DownloadPage/]
+Then download IGV app from: [https://igv.org/doc/desktop/#DownloadPage/].
 
