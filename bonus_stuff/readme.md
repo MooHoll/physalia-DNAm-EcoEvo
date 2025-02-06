@@ -9,3 +9,4 @@ Here you will find various folders with code that might be helpful for your proj
 
 ### Extra staff for DNA methylation
 * Genome-wide quantitifation by annoation (i.e. promoters, exons, introns...)
+* Alternate reference genomes (incorporating SNPs)
