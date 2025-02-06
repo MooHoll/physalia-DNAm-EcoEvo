@@ -176,6 +176,20 @@ samtools index F4_sorted.locus_haplotagged.bam
 
 Now your reads for this locus will have a tag depending on the haplogroup they got assigned, the `HP:i:1` will be haplogroup 1, and `HP:i:2` will be haplogroup 2. 
 
+## Use methylartist to visualize your locus of interest
 
+Methylartist can take the haplogroup information to give phased methylation information: 
+
+```
+conda activate longreads
+methylartist locus \
+-i NC_088680.1:70791301-70816739 \
+-b F4_sorted.locus_haplotagged.bam \
+-r GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
+-n CG -m m --panelratios 1,5,1,2,2 \
+-o TestLocusHaplo.png \
+-g GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
+```
+Download the `TestLocusHaplo.png` to see if this locus has any haplotype methylation difference. 
 
 
