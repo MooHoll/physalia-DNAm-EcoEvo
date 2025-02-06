@@ -5,8 +5,8 @@ Here you will find various folders with code that might be helpful for your proj
 ### Snakemake Pipelines
 * RNA-Seq processing
 * SNP calling
-* WGBS/RRBS/EM-Seq processing
 
 ### Extra staff for DNA methylation
 * Genome-wide quantitifation by annoation (i.e. promoters, exons, introns...)
 * Alternate reference genomes (incorporating SNPs)
+* Stuff on PacBio
