@@ -12,7 +12,7 @@ This is the Readme file for the session on Tuesday, where we will cover the seco
 
 Using the same data as yesterday, we will; examine the bisulfite conversion rate, extract readable DNA methylation C/T count data and account for genetic variation caused by SNPs.
 
-## Examining the Bisulfite / Enzymatic conversion rate
+## 1. Examining the Bisulfite / Enzymatic conversion rate
 
 For WGBS/RRBS a 1% spike of lambda phage genome is included in the DNA sample before bisulfite conversion. Lambda is unmethylated so acts as a negative control to understand how efficent the bisulfite converstion is. For EM-Seq both a lambda (negative control) and pUC19 (plasmid positive control - fully methylated) are used. It is also possible to check the conversation rate of samples by examining the chloroplast/mitochondria sequences as these are thought to be unmethylated. However, this has recently been questioned and so it is always better to use a controlled spike.
 
@@ -34,7 +34,7 @@ Whilst primarily checking the conversion rate ensures your data are of good qual
 *Other than recording the conversion rate, we do not use any of these files for further steps.*
 
 
-## Extracting Useable Methylation Counts
+## 2. Extracting Useable Methylation Counts
 
 After creating `.bam` files by aligning the sequencing data to the species reference genome, we must now convert these files into useable dataframes of methylation information. This is simply achieved with a few more `Bismark` commands.
 
@@ -72,6 +72,6 @@ These merged coverage files can also go straight into the differential DNA methy
 * Add the above steps to your Snakemake script
 * Attempt this on your own HPC using your own data (or practice data from NCBI)
 
-## Accounting for SNPs
+## 3. Accounting for SNPs
 
 to-do ...
