@@ -33,7 +33,23 @@ Let's have a look at the various modification models in the Dorado github repo:
 [https://github.com/nanoporetech/dorado
 ](https://github.com/nanoporetech/dorado?tab=readme-ov-file#dna-models)
 
-This course is aimed at researchers and technical workers who are or who will be generating and/or analysing DNA methylation from whole genome bisulfite sequencing data from IIlumina, PacBio data or Nanopore data. Examples demonstrated in this course will involve primarily non-model organisms with a draft reference genome available and examples of applications of this data type for different purposes will be covered.
+In a real case scenario, you'll have to look at what is available for the technology you used to sequence your libraries. Not everything is compatible with everything! Dorado and pod5 are very smart and figure out the details of your run for you, so you don't need to worry too much, but still, some combinations are simply not possible. The newest versions will always be better, but try to be consistent across samples (use same model for all your samples!). 
+
+Please *don't run this* as it will just clog the server, but this is how we have done the modification basecalling for the practical:
+
+```
+conda activate longreads
+~/software/dorado-0.9.1-linux-x64/bin/dorado --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/pod5_subset > F4_calls.bam
+samtools sort -o F4_sorted.bam F4_calls.bam
+samtools index F4_sorted.bam
+```
+
+If you have enough CPUs, you can always take advantage of that, using extra cores for samtools with `-@ 10`. 
+
+
+
+
+
 
 ## Program
 
