@@ -10,7 +10,7 @@ This is the Readme file for the session on Tuesday, where we will cover the seco
 
 ## Overview
 
-Using the same data as yesterday, we will; examing the bisulfite conversion rate, extract readable DNA methylation C/T count data and account for genetic variation caused by SNPs.
+Using the same data as yesterday, we will; examine the bisulfite conversion rate, extract readable DNA methylation C/T count data and account for genetic variation caused by SNPs.
 
 ## Examining the Bisulfite / Enzymatic conversion rate
 
@@ -71,3 +71,7 @@ These merged coverage files can also go straight into the differential DNA methy
 * Write a loop to carry out each step for all files
 * Add the above steps to your Snakemake script
 * Attempt this on your own HPC using your own data (or practice data from NCBI)
+
+## Accounting for SNPs
+
+to-do ...
