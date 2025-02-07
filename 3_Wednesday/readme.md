@@ -3,6 +3,7 @@
 ### Physalia-Courses 
 
 # Long-reads workshop  // 12th February, 2025
+### Instructor Alex de Mendoza
 
 This is the Readme file for the session on Wednesday, where we will cover the ONT analysis. All the data you'll need for this will be stored in: 
 
