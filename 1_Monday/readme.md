@@ -11,7 +11,7 @@ This is the Readme file for the session on Monday, where we will cover the first
 ## Overview
 
 In today's and tomorrow's sessions we will go through a basic version of bisulfite sequencing data processing using well-established tools, namely the Bismark suite.
-Today we will cover the initial stages of trimming, alignment, and deduplication. We will use data from the popular model plant Arabidopsis thaliana (thale cress) which has a high quality reference genome and an extensive catalogue of genomic and epigenomic data from over a thousand naturally-occurring varieties (accessions). Here we'll go through an example with a single-end read file.
+Today we will cover the initial stages of trimming, and alignment. We will use data from the popular model plant Arabidopsis thaliana (thale cress) which has a high quality reference genome and an extensive catalogue of genomic and epigenomic data from over a thousand naturally-occurring varieties (accessions). Here we'll go through an example with a single-end read file.
 
 ## 1. Obtain raw reads and subsample
 
