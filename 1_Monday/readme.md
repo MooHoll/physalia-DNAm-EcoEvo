@@ -28,7 +28,7 @@ Col-0  Dog-4  Etna-2  Kyoto
 Two (Col-0 and Kyoto) contain single-end data, while the other two (Dog-4 and Etna-2) contain paired-end data. Let's look inside the Col-0 folder.
 ```
 $ ls Col-0
-Col-0.g.vcf.gz  Col-0.g.vcf.gz.tbi  ftp.txt  SRR771698.fastq.gz
+ftp.txt  SRR771698.fastq.gz
 ```
 The file `SRR771698.fastq.gz` is the raw BSseq (single-end) read file in FASTQ format. The 'SRR' denotes that this is a sequencing run that was submitted to the NCBI sequence read archive. These read files are usually also backed up on the European Nucleotide Archive (ENA). For example, the present file can be found here:
 https://www.ebi.ac.uk/ena/browser/view/SRR771698
@@ -106,7 +106,35 @@ Adapter removal is sometimes performed by the sequencing facility (often platfor
 
 ## 3. Indexing the genome and aligning reads with Bismark
 
+While multiple alignment tools for BSseq data have been developed (e.g. Biscuit, BWA-meth), Bismark is the best established and most widely used. Briefly, Bismark performs in-silico bisulfite conversion of (C->T and G->A) conversions of the input reads and reference genome to facilitate alignment using one of three possible aligners (Bowtie2, Hisat2, or minimap2). High confidence alignments are then compared to the normal genomic sequence (Cs included) to infer the methylation state. By default, Bismark uses the Bowtie2 aligner.
 
+We first need to make an index for the Arabidopsis reference genome. Indexing is a strategy that alignment tools use to speed up alignment and is akin to an index at the end of a book, i.e. allowing specific short sequences to be found rapidly. Read more about genome indexing here: https://pmc.ncbi.nlm.nih.gov/articles/PMC2836519/
+Here, we ask Bismark to generate and index a bisulfite-converted genome for use with Bowtie2:
+```
+# make a directory for the genome: this is the directory we will supply to Bismark
+mkdir bisulfite_genome_TAIR10
+# copy the genome assembly into the new directory
+cp ~/Share/1_Monday/TAIR10_genome/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa bisulfite_genome_TAIR10
+# run bismark_genome_preparation
+bismark_genome_preparation bisulfite_genome_TAIR10
+```
+The `bismark_genome_preparation` command tells bismark to make an index of the genome within the 'bisulfite_genome_TAIR10' directory. When it is done, we are ready to align reads to the genome. We can align our quality-trimmed single-end reads as follows:
+```
+bismark --prefix Col0_align_TAIR10 -p 2 --bam bisulfite_genome_TAIR10 Col0_subsample.trimmed.fastq.gz
+```
+Or paired-end reads as follows:
+```
+bismark --prefix Dog4_align_TAIR10 -p 2 --bam bisulfite_genome_TAIR10 \
+-1 Dog4_subsample_1.trimmed.fastq.gz -2 Dog4_subsample_2.trimmed.fastq.gz
+```
+Note that the `--prefix` argument adds a specific string to the beginning of each output file. In any case, the output files are named after the input read files. Adding a prefix can be useful, for example if you want to align the reads to a different assembly (see advanced task, also tomorrow's conversion efficiency task).
+
+When it finishes, you'll see some output files, notably `Col0_align_TAIR10.Col0_subsample.trimmed_bismark_bt2.bam` and `Col0_align_TAIR10.Col0_subsample.trimmed_bismark_bt2_SE_report.txt`.
+The .bam file contains the alignments from which methylation calls will be extracted later. The report.txt contains information on the alignment process. You can view it as follows:
+```
+cat Col0_align_TAIR10.Col0_subsample.trimmed_bismark_bt2_SE_report.txt
+```
+In particular, the mapping efficiency is derived from the number of reads (or read pairs) with a unique best hit alignment divided by the total number of reads, i.e. the % of reads that could be confidently aligned to the genome. What factors could limit this value?
 
 ### Core Tasks:
 * Examine the `Bismark` documentation: [https://felixkrueger.github.io/Bismark/](https://felixkrueger.github.io/Bismark/)
@@ -115,7 +143,8 @@ Adapter removal is sometimes performed by the sequencing facility (often platfor
 * Examine the alignment report
 
 ### Advanced Tasks:
-* Copy a genome assembly of one of the non-reference accessions and repeat indexing and alignment. Does the choice of genome affect mapping efficiency?
-* Repeat the quality trimming from step 1 with more stringent parameters. Do trimming parameters affect mapping efficiency?
+* Copy an alternative genome assembly of one of the non-reference accessions and repeat indexing and alignment. Does the choice of genome affect mapping efficiency?
+* Bismark's default behaviour is to try to align reads in end-to-end mode. Try to repeat the alignment step using `--local` mode. How does thia affect mapping efficiency?
 
-
+Further reading:
+https://pmc.ncbi.nlm.nih.gov/articles/PMC4009243/
