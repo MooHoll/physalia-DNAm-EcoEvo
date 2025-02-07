@@ -65,7 +65,7 @@ rule meth_extraction:
     input:
         "{sample}_1_bismark_bt2_pe.deduplicated.bam"
     output:
-        "{sample}_1_bismark_bt2_pe.bismark.cov.gz"
+        "{sample}_1_bismark_bt2_pe.deduplicated.bismark.cov.gz"
     shell:
         """
         bismark_methylation_extractor \
@@ -76,7 +76,7 @@ rule meth_extraction:
 
 rule merge_cpgs:
     input:
-        "{sample}_1_bismark_bt2_pe.bismark.cov.gz"
+        "{sample}_1_bismark_bt2_pe.deduplicated.bismark.cov.gz"
     output:
         "{sample}.CpG_report.merged_CpG_evidence.cov"
     params:
