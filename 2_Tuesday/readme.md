@@ -79,11 +79,11 @@ These merged coverage files can also go straight into the differential DNA methy
 
 ## 3. Accounting for SNPs
 
-Most of the time the sample you are looking at comes from an different individual / genetic line than the one that was used to make the reference genome for your species. Therefore your sample will contain SNPs which differ to the reference genome. As bisulfite conversion converts C-->T we need to account for C/T SNPs in your sample to avoid miscalling incorrect DNA methylation differences between your sample and the reference genome.
+Most of the time the sample you are looking at comes from an different individual / genetic line than the one that was used to make the reference genome for your species. Therefore your sample will contain SNPs which differ to the reference genome. As bisulfite conversion converts C-->T we need to account for C/T SNPs in your sample to avoid miscalling incorrect DNA methylation differences between your sample and the reference genome. James will talk more about this on Day 4 but also see [de Carvalho et al. preprint](https://zenodo.org/records/14671205).
 
-If you have whole genome resequencing data (or are using long-reads - see Day 3), this is easily done by removing the SNP positions from your methylation call files.
+If you have whole genome resequencing data (or are using long-reads - see Day 3), this is easily done by removing the SNP positions from your methylation call files. We will provide you with `.vcf` files which contain SNP calls. However, we also provide a pipeline for calling SNPs in `bonus_stuff`.
 
-*NOTE: if you're interested in genetic differenece between your samples, as well as methylation differences, you can save this step until after youve carried out your differential DNA methylation analysis (Day4).*
+*NOTE: if you're interested in genetic differeneces between your samples, as well as methylation differences, you can save this step until after you've carried out your differential DNA methylation analysis (Day4). It's possible to do some pretty interesting stuff with these data - see [Venney et al. 2024](https://doi.org/10.1093/gbe/evae013).*
 
 ### Core Tasks:
 * Make two SNP position files, one for C/T and one G/A SNPs, from the vcf files provided
@@ -92,3 +92,11 @@ If you have whole genome resequencing data (or are using long-reads - see Day 3)
 ### Advanced Tasks:
 * Edit the `filter_SNPs_from_covfile.sh` file to re-name your final output file to something shorter
 * Write a loop to run this for multiple coverage files, with different vcf files each (this is tricker than you'd think)
+
+## Summary
+The steps from Day 1 and Day 2 are the full pipeline to process raw short-read data into useable DNA methylation count files, ready for whatever analysis you want to do. 
+
+This pipleine produces a lot of files, the final bits you actually need are:
+* Alignment rate
+* Bisulfite conversion rate
+* Coverage file (either the original, merged or SNP filtered version)
