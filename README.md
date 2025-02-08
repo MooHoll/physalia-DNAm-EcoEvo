@@ -16,6 +16,8 @@ Epigenetic studies on DNA methylation are now possible to do at the nucleotide l
 
 This course is aimed at researchers and technical workers who are or who will be generating and/or analysing DNA methylation from whole genome bisulfite sequencing data from IIlumina, PacBio data or Nanopore data. Examples demonstrated in this course will involve primarily non-model organisms with a draft reference genome available and examples of applications of this data type for different purposes will be covered.
 
+To make the most of this course, you should already be familiar with working on `command line interfaces` (high performance computing clusters) and `R`.
+
 ## Program
 
 ### Monday: DNA methylation analysis with short reads (Illumina WGBS and EM-Seq) – 2-7pm Berlin time
