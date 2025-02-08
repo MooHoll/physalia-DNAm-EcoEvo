@@ -3,6 +3,7 @@
 ### Physalia-Courses 
 
 # Short-reads workshop Day 1 // 10th February, 2025
+### Instructor James Ord
 
 This is the Readme file for the session on Monday, where we will cover the first half of the short-read processing. All the data you'll need for this will be stored in: 
 
