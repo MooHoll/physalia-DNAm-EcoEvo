@@ -3,7 +3,7 @@
 ### Physalia-Courses 
 
 # Short-reads workshop Day 2 // 11th February, 2025
-### Instructor Hollie Marshall
+### Instructor: Hollie Marshall
 
 This is the Readme file for the session on Tuesday, where we will cover the second half of the short-read processing. All the data you'll need for this will be stored in: 
 
