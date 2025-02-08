@@ -92,6 +92,7 @@ If you have whole genome resequencing data (or are using long-reads - see Day 3)
 ### Advanced Tasks:
 * Edit the `filter_SNPs_from_covfile.sh` file to re-name your final output file to something shorter
 * Write a loop to run this for multiple coverage files, with different vcf files each (this is tricker than you'd think)
+* Rather than filtering sites directly, you could also make an `alternate reference genome`, see `bonus_stuff`
 
 ## Summary
 The steps from Day 1 and Day 2 are the full pipeline to process raw short-read data into useable DNA methylation count files, ready for whatever analysis you want to do. 
