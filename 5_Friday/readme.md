@@ -68,3 +68,5 @@ sed -i "s/;.*//g" random_species_genes.bed
 ### Step 2: Calculate the weighted methylation level for all genes
 
 * Follow the `R` script: `weighted_meth_per_feature.R` using the files provided
+
+### Step 3: Make some nice plots to see what's going on genome-wide
