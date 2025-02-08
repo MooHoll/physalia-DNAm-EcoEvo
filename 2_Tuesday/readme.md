@@ -79,4 +79,16 @@ These merged coverage files can also go straight into the differential DNA methy
 
 ## 3. Accounting for SNPs
 
-to-do ...
+Most of the time the sample you are looking at comes from an different individual / genetic line than the one that was used to make the reference genome for your species. Therefore your sample will contain SNPs which differ to the reference genome. As bisulfite conversion converts C-->T we need to account for C/T SNPs in your sample to avoid miscalling incorrect DNA methylation differences between your sample and the reference genome.
+
+If you have whole genome resequencing data (or are using long-reads - see Day 3), this is easily done by removing the SNP positions from your methylation call files.
+
+*NOTE: if you're interested in genetic differenece between your samples, as well as methylation differences, you can save this step until after youve carried out your differential DNA methylation analysis (Day4).*
+
+### Core Tasks:
+* Make two SNP position files, one for C/T and one G/A SNPs, from the vcf files provided
+* Run the `filter_SNPs_from_covfile.sh` file twice (once for each SNP position file) to remove SNPs from your coverage file
+
+### Advanced Tasks:
+* Edit the `filter_SNPs_from_covfile.sh` file to re-name your final output file to something shorter
+* Write a loop to run this for multiple coverage files, with different vcf files each (this is tricker than you'd think)
