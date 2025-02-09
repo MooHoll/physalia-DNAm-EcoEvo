@@ -66,13 +66,13 @@ sed -i "s/;.*//g" random_species_annotation.bed
 ```
 ### Step 2: Calculate the weighted methylation level for all genes
 
-* Follow the `R` script: `weighted_meth_per_feature.R` using the files provided
+* Follow the `R` script: `01_weighted_meth_per_feature.R` using the files provided
 
 *Use the small versions of the files to try to get it working, the larger versions are full `coverage` and `annotation` files for Daphnia magna - a species of waterflea.*
 
 ### Step 3: Make some nice plots to see what's going on genome-wide
 
-* Follow the `R` script: `methylation_feature_graphs.R` to see what's going on with DNA methylation genome-wide in this species
+* Follow the `R` script: `02_methylation_feature_graphs.R` to see what's going on with DNA methylation genome-wide in this species
 
 *Use the full version of the methylation file, named: `weighted_meth_all_samples_full.txt`.*
 
