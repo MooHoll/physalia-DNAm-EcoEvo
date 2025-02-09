@@ -5,9 +5,11 @@
 # Advanced DNA methylation workshop Day 5 // 14th February, 2025
 ### Instructor: Hollie Marshall
 
-This is the Readme file for the session on Friday, where we will cover genome-wide DNA methylation profiling and correlations with gene expression in `R`. All the data you'll need for this will be stored in: 
+This is the Readme file for the session on Friday, where we will cover genome-wide DNA methylation profiling and correlations with gene expression in `R`. All the data you'll need for this will be available on `GitHub`: 
 
-`~/Share/5_Friday/`
+`MooHoll/physalia-DNAm-EcoEvo/tree/main/5_Friday/weighted_meth_files`
+
+`MooHoll/physalia-DNAm-EcoEvo/tree/main/5_Friday/gene_exp_with_meth`
 
 ## Overview
 
@@ -68,4 +70,4 @@ sed -i "s/;.*//g" random_species_annotation.bed
 
 * Follow the `R` script: `weighted_meth_per_feature.R` using the files provided
 
-*Use the small versions of the files to try to get it working, the larger versions are full `coverage` and `annotation` files for Daphnia magna - a species of waterflea.*
+*The files we will use are a subset of the actual files and so the final results won't be biologically meaningful.*
