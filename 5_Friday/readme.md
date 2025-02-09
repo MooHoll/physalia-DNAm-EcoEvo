@@ -78,7 +78,7 @@ We will now explore how general genome-wide DNA methylation and gene expression 
 It's worth noting that this exercise is fairly species-specific. For example, almost all arthropods examined to date have shown no direct relationship between differential DNA methylation and differential gene expression, i.e. unlike promoter DNA methylation in mammals, it appears there is not a direct relationship between the two.
 
 ### Step 1: Genome-wide correlations
-For simplicity, in this exercise, we will use gene expression data (FPKMs) and weighted methylation data from a single sample.
+In this exercise, we will use gene expression data (FPKMs) and weighted methylation data from [Yu et al. 2023](https://academic.oup.com/evolut/article/77/5/1203/7069110).
 
 ### Step 2: Differential DNA methylation and differential gene expression
 
