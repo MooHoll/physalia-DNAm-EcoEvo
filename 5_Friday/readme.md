@@ -71,3 +71,8 @@ sed -i "s/;.*//g" random_species_annotation.bed
 *Use the small versions of the files to try to get it working, the larger versions are full `coverage` and `annotation` files for Daphnia magna - a species of waterflea.*
 
 ### Step 3: Make some nice plots to see what's going on genome-wide
+
+* Follow the `R` script: `methylation_feature_graphs.R` to see what's going on with DNA methylation genome-wide in this species
+
+*Use the full version of the methylation file, named: `weighted_meth_all_samples_full.txt`.*
+
