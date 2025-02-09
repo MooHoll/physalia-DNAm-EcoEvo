@@ -71,3 +71,10 @@ sed -i "s/;.*//g" random_species_annotation.bed
 * Follow the `R` script: `weighted_meth_per_feature.R` using the files provided
 
 *The files we will use are a subset of the actual files and so the final results won't be biologically meaningful.*
+
+## 2. Gene expression and DNA methylation relationships
+We will now explore how general genome-wide DNA methylation and gene expression correlate in our samples. We will also examine whether differentially methylated genes correspond to differentially expressed genes. These scripts could be useful for other kinds of data as well, such as correlations with ATAC or ChIP-Seq/CUT&Tag.
+
+It's worth noting that this exercise is fairly species-specific. For example, almost all arthropods examined to date have shown no direct relationship between differential DNA methylation and differential gene expression, i.e. unlike promoter DNA methylation in mammals, it appears there is not a direct relationship between the two.
+
+### Step 1: XXX
