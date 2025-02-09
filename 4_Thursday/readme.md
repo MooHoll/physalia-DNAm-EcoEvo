@@ -2,7 +2,7 @@
 
 ### Physalia-Courses 
 
-# Differential DNA methylation workshop Day 4 // 13th February, 2025
+## Differential DNA methylation workshop Day 4 // 13th February, 2025
 ### Instructor: James Ord
 
 This is the Readme file for the session on Thursday, where we will cover differential DNA methylation analysis in `R`. All the data you'll need for this will be stored in: 
@@ -17,7 +17,7 @@ We will start with methylation counts files (.cov.gz) output from bismark_methyl
 
 ## Workflow
 
-# Reading in files / initial processing
+### Reading in files / initial processing
 Note here that we specify that the counts files derived from bismark, and that we set a minimum coverage of 5 at each site.
 ```
 #set path to methylation files
@@ -72,7 +72,7 @@ levels(as.factor(meth$chr))
 # Remove the Mitochondrion; We will leave in the Y chromosome and as all the individuals are reportedly male
 meth<-meth[meth$chr!="chrM", ]
 ```
-# Overview of methylation levels and variance
+### Overview of methylation levels and variance
 We saw above that one can plot the distributions of methylation levels for individual samples in the non-united object. We can also visualise means and variances using methylation levels extracted from the united object.
 ```
 # get the methylation levels for each sample and window
@@ -96,7 +96,7 @@ It may be pertinent to exclude sites that have no variation, as they are not inf
 ```
 meth<-meth[methmeans>0&methmeans<100,]
 ```
-# Futher exploratory analysis: PCA
+### Futher exploratory analysis: PCA
 PCA is a common way of inspecting the extent of variation within and between groups. In methylKit we can generate and plot this with one command.
 ```
 par(mfrow=c(1,1))
@@ -110,7 +110,7 @@ PCA.obj$x
 # get the % variance explained for the first two PCs
 PCA.obj$sdev[c(1,2)]/sum(PCA.obj$sdev)
 ```
-# Differential methylation
+### Differential methylation
 methylKit differential methylation analyses are limited to two-group comparisons, although covariates can be included (see the methylKit vignette). For models with multiple groups or factorial designs, check out DSS and / or edgeR.
 
 Let's perform a differential methylation comparison between marine and freshwater fish. We first need to create a new methylKit object with only these six samples.
@@ -153,7 +153,7 @@ ggplot(subset(DMdata,chr=="chrI"),aes(x=start,y=meth.diff))+
          geom_point(aes(fill=result),pch=21,alpha=0.5)+
   scale_fill_manual(values=c("red","blue","grey"))
 ```
-# Intersecting with functional annotation
+### Intersecting with functional annotation
 methylKit objects can be used with functions from the genomation package to incorporate functional annotation.
 ```
 library("genomation")
@@ -193,7 +193,7 @@ head(DM_promoters)
 nrow(DM_promoters) # putative promoters of 240 transcripts overlap DMRs
 ```
 
-# Adding more information from the ENSEMBL database
+### Adding more information from the ENSEMBL database
 Now we have a list of transcripts that are interesting to us because of DMRs overlapping the promoters. We can fetch more information, e.g. gene names and descriptions, from the ENSEMBL database...
 ```
 library(biomaRt)
@@ -212,12 +212,12 @@ query<-getBM(attributes = c('ensembl_transcript_id','ensembl_gene_id','external_
 head(query)
 ```
 Note that there are 4 transcript entires missing. I suspect a small number were deprecated between ENSEMBL versions 95 and 99.
-```
+
 ## Exercises:
 * Perform the DMR analysis for the environmental comparison (MM vs MF)
 * Are any promoter regions differentially methylated in both comparisons?
 * What happens if you use non-SNP-filtered counts files? does this affect the number of DMRs found?
-```
+
 Appendix: Obtaining BED12 file of stickleback transcripts
 The stickleback V5 gff3 annotation was obtained (https://stickleback.genetics.uga.edu/downloadData/) and converted it to BED12 format (for use with genomation) with the AGAT toolkit:
 ```
