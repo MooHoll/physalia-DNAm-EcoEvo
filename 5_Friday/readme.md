@@ -75,12 +75,21 @@ sed -i "s/;.*//g" random_species_annotation.bed
 ## 2. Gene expression and DNA methylation relationships
 We will now explore how general genome-wide DNA methylation and gene expression correlate in our samples. We will also examine whether differentially methylated genes correspond to differentially expressed genes. These scripts could be useful for other kinds of data as well, such as correlations with ATAC or ChIP-Seq/CUT&Tag.
 
-It's worth noting that this exercise is fairly species-specific. For example, almost all arthropods examined to date have shown no direct relationship between differential DNA methylation and differential gene expression, i.e. unlike promoter DNA methylation in mammals, it appears there is not a direct relationship between the two.
+### Step 1: Combine DNA methylation and gene expression matrices
+As you will likely produce slightly different looking dataframes, I didn't think it would be relevant to go through how I merge multiple dataframes in `R`. In case it's useful though, I have provided my raw files and the code for this in the `gene_exp_with_meth` folder.
 
-### Step 1: Genome-wide correlations
-In this exercise, we will use gene expression data (`FPKMs`) and weighted methylation data from [Yu et al. 2023](https://academic.oup.com/evolut/article/77/5/1203/7069110).
+Additionally, whilst we don't teach differential gene expression analysis from RNA-Seq on this course, we have provided you with a simple pipeline in the `bonus_stuff` section to generate `FPKM` count files and differentially expressed genes between conditions.
 
-Whilst we don't teach differential gene expression analysis from RNA-Seq on this course, we have provided you with a simple pipeline in the `bonus_stuff` section to generate `FPKM` count files and differentially expressed genes between conditions.
+### Step 2: Genome-wide correlations
+In this exercise, we will use gene expression data (`FPKMs`) and weighted methylation data from [Yu et al. 2023](https://academic.oup.com/evolut/article/77/5/1203/7069110). This paper examined DNA methylation and gene expression differences between male and female psyllid bugs. 
 
-### Step 2: Differential DNA methylation and differential gene expression
+* Follow the `R` script: `relationship_general_meth_and_exp.R` using the file provided in the `gene_exp_with_meth` folder
 
+### Step 3: Differential DNA methylation and differential gene expression
+It's worth noting that this exercise is fairly species-specific. For example, almost all arthropods examined to date have shown no direct relationship between differential DNA methylation and differential gene expression, i.e. unlike promoter DNA methylation in mammals, it appears there is not a direct relationship between differential gene-body DNA methylation and expression in arthropods.
+
+* Follow the `R` script: `relationship_diff_exp_diff_meth.R` using the file provided in the `gene_exp_with_meth` folder
+
+### Advanced: R script automation
+
+* Consider how you could edit these scripts so they run automatically on the command line, with only the input file specified.
