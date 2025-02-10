@@ -107,7 +107,7 @@ Adapter removal is sometimes performed by the sequencing facility (often platfor
 
 ## 3. Indexing the genome and aligning reads with Bismark
 
-While multiple alignment tools for BSseq data have been developed (e.g. Biscuit, BWA-meth), Bismark is the best established and most widely used. Briefly, Bismark performs in-silico bisulfite conversion of (C->T and G->A) conversions of the input reads and reference genome to facilitate alignment using one of three possible aligners (Bowtie2, Hisat2, or minimap2). High confidence alignments are then compared to the normal genomic sequence (Cs included) to infer the methylation state. By default, Bismark uses the Bowtie2 aligner.
+While multiple alignment tools for BSseq data have been developed (e.g. Biscuit, BWA-meth), Bismark is the best established and most widely used. Briefly, Bismark performs in-silico bisulfite conversion (C->T and G->A) of the input reads and reference genome to facilitate alignment using one of three possible aligners (Bowtie2, Hisat2, or minimap2). High confidence alignments are then compared to the normal genomic sequence (i.e. with Cs included again) to infer the methylation state. By default, Bismark uses the Bowtie2 aligner.
 
 We first need to make an index for the Arabidopsis reference genome. Indexing is a strategy that alignment tools use to speed up alignment and is akin to an index at the end of a book, i.e. allowing specific short sequences to be found rapidly. Read more about genome indexing here: https://pmc.ncbi.nlm.nih.gov/articles/PMC2836519/
 Here, we ask Bismark to generate and index a bisulfite-converted genome for use with Bowtie2:
@@ -136,6 +136,13 @@ The .bam file contains the alignments from which methylation calls will be extra
 cat Col0_align_TAIR10.Col0_subsample.trimmed_bismark_bt2_SE_report.txt
 ```
 In particular, the mapping efficiency is derived from the number of reads (or read pairs) with a unique best hit alignment divided by the total number of reads, i.e. the % of reads that could be confidently aligned to the genome. What factors could limit this value?
+
+Finally, let's perform deduplication. This removes reads originating from possible PCR duplicates (inferred due to having identical alignment start or end coordinates) which might otherwise artificially skew subsequent estimates of methylation levels. Note that this may not detect all actual duplicates, given that quality trimming may affect some duplicates differently thus resulting in slightly different alignment start / end coordinates.
+```
+# remove PCR duplicates from BAM file
+deduplicate_bismark --bam --outfile Col0_align_TAIR10 Col0_align_TAIR10.Col0_subsample.trimmed_bismark_bt2.bam
+# add --paired if data were paired-end
+```
 
 ### Core Tasks:
 * Examine the `Bismark` documentation: [https://felixkrueger.github.io/Bismark/](https://felixkrueger.github.io/Bismark/)
