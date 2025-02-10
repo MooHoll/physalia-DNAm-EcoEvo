@@ -166,7 +166,7 @@ The file `locus.bed` is simply to subset the variant calling to small region of 
 First you need to tag your haplogroups found with clair3
 
 ```
-conda activate whatshap
+conda activate whatshap-env
 
 samtools view -b F4_sorted.bam -L locus.bed > locus.bam
 samtools index locus.bam
