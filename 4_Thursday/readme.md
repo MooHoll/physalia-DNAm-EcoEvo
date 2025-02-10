@@ -18,7 +18,8 @@ We will start with methylation counts files (.cov.gz) output from bismark_methyl
 ## Workflow
 
 ### Reading in files / initial processing
-Note here that we specify that the counts files derived from bismark, and that we set a minimum coverage of 5 at each site.
+Download the folder 'Stickleback_covfiles_SNPfilt' from the server into your working directory, either using a file transfer client like filezilla or using the sftp command on a local terminal.
+Once they are accessible on your local computer, we can read them into R with methylKit's methRead() function. Note here that we specify that the counts files derived from bismark, and that we set a minimum coverage of 5 at each site.
 ```
 #set path to methylation files
 meth_path<-"Stickleback_covfiles_SNPfilt/"
