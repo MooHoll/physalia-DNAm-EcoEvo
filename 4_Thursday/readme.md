@@ -212,7 +212,7 @@ query<-getBM(attributes = c('ensembl_transcript_id','ensembl_gene_id','external_
 
 head(query)
 ```
-Note that there are 4 transcript entires missing. I suspect a small number were deprecated between ENSEMBL versions 95 and 99.
+Note that there are 4 transcript entries missing. I suspect a small number were deprecated between ENSEMBL versions 95 and 99.
 
 ## Exercises:
 * Perform the DMR analysis for the environmental comparison (MM vs MF)
