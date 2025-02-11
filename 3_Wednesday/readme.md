@@ -39,7 +39,7 @@ In a real case scenario, you'll have to look at what is available for the techno
 Please **don't run this** as it will just clog the server, but this is how we have done the modification basecalling for the practical:
 
 ```
-conda activate longreads
+conda activate /home/ubuntu/miniconda3/envs/longreads
 Share/3_Wednesday/software/dorado-0.9.1-linux-x64/bin/dorado basecaller --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/pod5_subset > F4_calls.bam
 samtools sort -o F4_sorted.bam F4_calls.bam
 samtools index F4_sorted.bam
@@ -128,18 +128,22 @@ tabix -p gff GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
 Methylartist can be installed via conda.
 
 ```
-conda activate longreads
+conda activate /home/ubuntu/miniconda3/envs/methylartist_env
+
 methylartist region \
 -i NC_088681.1:36215487-36221147 \
 -b F4_sorted.bam \
 -r /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 -n CG -m m --panelratios 1,2,1,1 \
--o TestRegion.png \
--g GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
+-o TestRegion.png
+# this option below doesn't work for 
+-g /home/user1/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
 ```
 
 Download the test region png file to your computer using `scp`.
-
+`
+scp -i c1.pem user1@"54.218.18.36:/home/user1/*png" ~/Downloads/TestRegion.png
+`
 
 # Phased methylation calling
 
@@ -148,12 +152,12 @@ If your long reads have enough covarage and have enough quality (R10 better than
 
 Here we will do a toy example: 
 ```
-conda activate clair3
+conda activate /home/ubuntu/miniconda3/envs/clair3
 
 echo -e "NC_088680.1\t70781301\t70886739" > locus.bed
 
 run_clair3.sh --bam_fn=F4_sorted.bam \
---ref_fn=GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
+--ref_fn=/home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 --threads=2 --platform="ont" \
 --model_path=/home/ubuntu/miniconda3/envs/clair3/bin/models/ont \
 --output=clair3_subset --enable_phasing --include_all_ctgs \
@@ -170,21 +174,24 @@ The file `locus.bed` is simply to subset the variant calling to small region of 
 First you need to tag your haplogroups found with clair3
 
 ```
-conda activate whatshap-env
+conda activate /home/ubuntu/miniconda3/envs/whatshap-env
 
 samtools view -b F4_sorted.bam -L locus.bed > locus.bam
 samtools index locus.bam
 
-whatshap haplotag \
---reference GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
-clair3_subset/phased_merge_output.vcf.gz \
+whatshap haplotag clair3_subset/phased_merge_output.vcf.gz locus.bam \
+--reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 -o F4_sorted.locus_haplotagged.bam \
 --skip-missing-contigs \
 --output-threads 2 \
- --ignore-read-groups \ 
-locus.bam
+--ignore-read-groups 
+
 
 samtools index F4_sorted.locus_haplotagged.bam
+
+samtools view F4_sorted.locus_haplotagged.bam | grep "HP:i:1" | wc -l
+samtools view F4_sorted.locus_haplotagged.bam | grep "HP:i:2" | wc -l
+
 ```
 Now your reads for this locus will have a tag depending on the haplogroup they got assigned, the `HP:i:1` will be haplogroup 1, and `HP:i:2` will be haplogroup 2. 
 
@@ -195,14 +202,19 @@ In a real case scenario, you would simply run this with a vcf file for all conti
 Methylartist can take the haplogroup information to give phased methylation information: 
 
 ```
-conda activate longreads
+conda activate /home/ubuntu/miniconda3/envs/methylartist_env
+
 methylartist locus \
 -i NC_088680.1:70791301-70816739 \
 -b F4_sorted.locus_haplotagged.bam \
--r GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
+-r /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 -n CG -m m --panelratios 1,5,1,2,2 \
 -o TestLocusHaplo.png \
--g GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
+-g /home/user1/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
+
+# for a strange region, this didn't work on my end unless I pasted it in a single line code:
+methylartist locus -i NC_088680.1:70791301-70816739 -b F4_sorted.locus_haplotagged.bam -r /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa -n CG -m m --panelratios 1,5,1,2,2 -o TestLocus3.png --phased -g /home/user1/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz 
+
 ```
 Download the `TestLocusHaplo.png` to see if this locus has any haplotype methylation difference. 
 
