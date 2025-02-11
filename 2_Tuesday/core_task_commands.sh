@@ -14,7 +14,7 @@ conda activate /home/ubuntu/miniconda3/envs/short_read
 # ---------------------------------------------------------
 
 # Get data into your area
-cp ~/Share/1_Monday/raw_data_for_alignment/Col-O/SRR771698.fastq.gz ./
+cp ~/Share/1_Monday/raw_data_for_alignment/Col-0/*gz ./
 
 # Subsample your data to a smaller file, this just makes it easier for us to work with
 # This uses the BBtools package (already installed in the conda environment)
