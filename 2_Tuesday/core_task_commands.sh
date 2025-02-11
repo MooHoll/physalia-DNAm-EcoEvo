@@ -44,10 +44,10 @@ cp -r ~/Share/1_Monday/TAIR10_genome ./
 bismark_genome_preparation ./TAIR10_genome
 
 # Align your file to the referece genome
-bismark --multicore 3 --genome ./TAIR10_genome/ Col0_subsample.trimmed.fastq.gz
+bismark --multicore 2 --genome ./TAIR10_genome/ Col0_subsample.trimmed.fastq.gz
 
 # Paired-end alignment for those working with the paired data
-#bismark --multicore 3 --genome ./TAIR10_genome/ -1 SRR3301595_1.fastq.gz -2 SRR3301595_2.fastq.gz
+#bismark --multicore 2 --genome ./TAIR10_genome/ -1 SRR3301595_1.fastq.gz -2 SRR3301595_2.fastq.gz
 
 # Examine the output report file
 nano Col0_subsample.trimmed.fastq_bismark_bt2_PE_report.txt
@@ -64,10 +64,10 @@ cp -r ~/Shared/2_Tuesday/TAIR10_chloroplast/ ./
 bismark_genome_preparation ./TAIR10_chloroplast
 
 # As above - single end alignment
-bismark --prefix chloroplast --multicore 3 --genome ./TAIR10_genome/ Col0_subsample.trimmed.fastq.gz
+bismark --prefix chloroplast --multicore 2 --genome ./TAIR10_genome/ Col0_subsample.trimmed.fastq.gz
 
 # Paired end alignment
-# bismark --prefix chloroplast --multicore 3 --genome ./TAIR10_chloroplast/ -1 SRR3301595_1.fastq.gz -2 SRR3301595_2.fastq.gz
+# bismark --prefix chloroplast --multicore 2 --genome ./TAIR10_chloroplast/ -1 SRR3301595_1.fastq.gz -2 SRR3301595_2.fastq.gz
 
 # Examine the output files
 nano chloroplast.Col0_subsample.trimmed.fastq_bismark_bt2_PE_report.txt 
