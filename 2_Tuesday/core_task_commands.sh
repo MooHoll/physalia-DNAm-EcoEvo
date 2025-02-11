@@ -38,16 +38,16 @@ scp -i <YOUR>.pem <user>@34.209.238.173://home/ubuntu/*.html ./
 # ---------------------------------------------------------
 
 # Get the genome folder (with the .fa genome file inside)
-cp -r ~/Share/1_Monday/XXX ./
+cp -r ~/Share/1_Monday/TAIR10_genome ./
 
 # Prepare the genome for alignment
 bismark_genome_preparation ./TAIR10_genome
 
 # Align your file to the referece genome
-bismark --multicore 3 --genome ./TAIR10_chloroplast/ Col0_subsample.trimmed.fastq.gz
+bismark --multicore 3 --genome ./TAIR10_genome/ Col0_subsample.trimmed.fastq.gz
 
 # Paired-end alignment for those working with the paired data
-#bismark --multicore 3 --genome ./TAIR10_chloroplast/ -1 SRR3301595_1.fastq.gz -2 SRR3301595_2.fastq.gz
+#bismark --multicore 3 --genome ./TAIR10_genome/ -1 SRR3301595_1.fastq.gz -2 SRR3301595_2.fastq.gz
 
 # Examine the output report file
 nano Col0_subsample.trimmed.fastq_bismark_bt2_PE_report.txt
@@ -84,7 +84,7 @@ deduplicate_bismark Col0_subsample.trimmed.fastq_bismark_bt2.bam
 
 # Extract the methylation data
 bismark_methylation_extractor --multicore 3 --comprehensive --bedGraph --report --cytosine_report \
---genome_folder TAIR10_genome/ Col0_subsample.trimmed.fastq_bismark_bt2.bam
+--genome_folder ./TAIR10_genome/ Col0_subsample.trimmed.fastq_bismark_bt2.bam
 
 # Examine the M-bias plots on your computer using Filezilla or the below copy command
 exit # to exit the server
@@ -95,7 +95,7 @@ scp -i <YOUR>.pem <user>@34.209.238.173://home/ubuntu/*.png ./ # edit this for y
 # Re-ativate the conda environment
 
 # Optional: merge strands
-coverage2cytosine -o Col0 --merge_CpGs --genome_folder TAIR10_genome/ Col0_subsample.trimmed.fastq_bismark_bt2.bam
+coverage2cytosine -o Col0 --merge_CpGs --genome_folder ./TAIR10_genome/ Col0_subsample.trimmed.fastq_bismark_bt2.bam
 
 # ---------------------------------------------------------
 # 2c. Accounting for SNPs
@@ -109,9 +109,5 @@ zcat Col-0.g.vcf.gz | grep -v "#" | awk '$4=="C"&&$5=="T,<NON_REF>"' | cut -f1,2
 zcat Col-0.g.vcf.gz | grep -v "#" | awk '$4=="G"&&$5=="A,<NON_REF>"' | cut -f1,2 > Col-0_SNPs_GtoA.txt
 
 # Run the filtering script provided - coverage files end in .cov or .cov.gz
-bash filter_SNPs_from_covfile.sh <your_coverage_file> Col-0_SNPs_CtoT.txt
-bash filter_SNPs_from_covfile.sh <output_from_command_above> Col-0_SNPs_GtoA.txtGtoA.txt
-
-# Run the filtering script provided
 bash filter_SNPs_from_covfile.sh <your_coverage_file> Col-0_SNPs_CtoT.txt
 bash filter_SNPs_from_covfile.sh <output_from_command_above> Col-0_SNPs_GtoA.txt
