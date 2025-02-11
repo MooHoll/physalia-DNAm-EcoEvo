@@ -2,7 +2,9 @@
 # Commands for the Core Tasks of short-read processing
 # ---------------------------------------------------------
 
+# Change directory to where you .pem file is located
 # Log in using the ssh command
+ssh -i <your_number>.pem user<number>@<IP_code>
 
 # Activate the conda environment
 conda activate /home/ubuntu/miniconda3/envs/short_read
