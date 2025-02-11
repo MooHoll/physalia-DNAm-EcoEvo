@@ -98,7 +98,7 @@ scp -i <YOUR>.pem <user>@34.209.238.173://home/ubuntu/*.png ./ # edit this for y
 coverage2cytosine -o Col0 --merge_CpGs --genome_folder ./TAIR10_genome/ Col0_subsample.trimmed.fastq_bismark_bt2.bam
 
 # ---------------------------------------------------------
-# 2c. Accounting for SNPs
+# 2c. Optional: Accounting for SNPs
 # ---------------------------------------------------------
 
 # Copy the SNP files for your chosen strain from the /Shared/ area to your area
