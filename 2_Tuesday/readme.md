@@ -13,6 +13,10 @@ This is the Readme file for the session on Tuesday, where we will cover the seco
 
 Using the same data as yesterday, we will; examine the bisulfite conversion rate, extract readable DNA methylation C/T count data and account for genetic variation caused by SNPs.
 
+## 0. Finishing up from yesterday
+
+The last step we need to complete from yesterday is to align out subsample of the reads (the .fastq file) to the reference Arabidopsis genome. You can either read through the documentation on Monday, or take the commands from the `core_task_commands.sh` document to get you going.
+
 ## 1. Examining the Bisulfite / Enzymatic conversion rate
 
 For WGBS/RRBS a 1% spike of lambda phage genome is included in the DNA sample before bisulfite conversion. Lambda is unmethylated so acts as a negative control to understand how efficent the bisulfite converstion is. For EM-Seq both a lambda (negative control) and pUC19 (plasmid positive control - fully methylated) are used. It is also possible to check the conversation rate of samples by examining the chloroplast/mitochondria sequences as these are thought to be unmethylated. However, this has recently been questioned and so it is always better to use a controlled spike.
