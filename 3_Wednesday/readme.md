@@ -40,16 +40,19 @@ Please **don't run this** as it will just clog the server, but this is how we ha
 
 ```
 conda activate longreads
-~/software/dorado-0.9.1-linux-x64/bin/dorado --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/pod5_subset > F4_calls.bam
+Share/3_Wednesday/software/dorado-0.9.1-linux-x64/bin/dorado basecaller --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/pod5_subset > F4_calls.bam
 samtools sort -o F4_sorted.bam F4_calls.bam
 samtools index F4_sorted.bam
 ```
 
-If you have enough CPUs, you can always take advantage of that, using extra cores for samtools with `-@ 10`. 
+Besides the GPUs, if you have enough CPUs, you can always take advantage of that, using extra cores for samtools with `-@ 10`. 
 
-This bam file contains your reads aligned to the reference genome, with the special flags **MM** and **ML** with the methylation probabilites / values. You can have a look at your reads using:
+This bam file contains your reads aligned to the reference genome, with the special flags **MM** and **ML** with the methylation probabilites / values. Let's copy You can have a look at your reads using:
 
-`samtools view F4_sorted.bam | head`
+```
+ln -s /home/ubuntu/Share/3_Wednesday/rawdata/F4_sorted.bam
+samtools view F4_sorted.bam | head
+```
 
 In case you're curious, our reads belong to *Planococcus citri* (citrus mealybug).
 
@@ -80,7 +83,7 @@ For our test dataset we want to call methylation only on CpGs, this is an insect
 --prefix mCG \
 --combine-strands \
 --ignore h \
-/home/ubuntu/Share/3_Wednesday/rawdata/F4_sorted.bam
+/home/ubuntu/Share/3_Wednesday/rawdata/F4_sorted.bam \
 F4_modkit.bedMethyl
 ```
 This settings only focus on CpGs and combine information from Watson and Crick strand in a single value, all that makes it easier/compact, but depending on analysis, you might want it. Also ignores "h", which is the hydroxmethylation calling. Probably not a great idea for this organism. 
@@ -128,7 +131,7 @@ conda activate longreads
 methylartist region \
 -i NC_088681.1:36215487-36221147 \
 -b F4_sorted.bam \
--r GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
+-r /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 -n CG -m m --panelratios 1,2,1,1 \
 -o TestRegion.png \
 -g GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
