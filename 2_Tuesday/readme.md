@@ -21,7 +21,7 @@ Today for ease, we will check the conversion rate of the Arabidopsis data using 
 
 ### Core Tasks:
 * Copy the Arabidopsis chloroplast genome into your area
-* Using what you learnt yesterday, prepare the genome using bismark
+* Using what you learnt yesterday (or by referring to the [Bismark Documentation](https://felixkrueger.github.io/Bismark/), prepare the genome using bismark
 * Align your sequence files to the chloroplast genome
 * Examine the output report - what is your conversion rate?
 
