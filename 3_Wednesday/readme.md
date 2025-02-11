@@ -51,6 +51,7 @@ This bam file contains your reads aligned to the reference genome, with the spec
 
 ```
 ln -s /home/ubuntu/Share/3_Wednesday/rawdata/F4_sorted.bam
+samtools index F4_sorted.bam
 samtools view F4_sorted.bam | head
 ```
 
