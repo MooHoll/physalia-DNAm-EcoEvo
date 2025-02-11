@@ -104,7 +104,7 @@ coverage2cytosine -o Col0 --merge_CpGs --genome_folder ./TAIR10_genome/ Col0_sub
 # ---------------------------------------------------------
 
 # Copy the SNP files for your chosen strain from the /Shared/ area to your area
-cp -r ~/Shared/2_Tuesday/XXX ./
+cp ~/Shared/2_Tuesday/SNP_calls/Col-0.g.vcf.gz ./
 
 # Get the C/T and G/A SNPs we want to filter from a vcf
 zcat Col-0.g.vcf.gz | grep -v "#" | awk '$4=="C"&&$5=="T,<NON_REF>"' | cut -f1,2 > Col-0_SNPs_CtoT.txt
