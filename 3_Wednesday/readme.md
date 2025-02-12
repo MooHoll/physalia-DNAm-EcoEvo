@@ -209,7 +209,7 @@ methylartist locus \
 -b F4_sorted.locus_haplotagged.bam \
 -r /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 -n CG -m m --panelratios 1,5,1,2,2 \
--o TestLocusHaplo.png \
+-o TestLocusHaplo.png --phased \
 -g /home/user1/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
 
 # for a strange region, this didn't work on my end unless I pasted it in a single line code:
