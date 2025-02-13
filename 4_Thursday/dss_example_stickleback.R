@@ -22,7 +22,7 @@ read_and_reformat <- function(x){
   }
 
 # example with one file
-head(read_and_reformat("./stickleback_cov_files_130225/FF1.merged_CpG_evidence.SNPfilt.mincov5.cov.gz"))
+head(read_and_reformat("./stickleback_cov_files/FF1.merged_CpG_evidence.SNPfilt.mincov5.cov.gz"))
 
 # now use lapply to apply the function to all the files
 samples <- lapply(file.list, read_and_reformat)
