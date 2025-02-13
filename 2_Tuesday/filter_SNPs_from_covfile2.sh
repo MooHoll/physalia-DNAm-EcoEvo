@@ -13,7 +13,7 @@
 # sh filter_SNPs_from_covfile2.sh Dog4.CpG_report.merged_CpG_evidence.cov.gz Dog-4.g.vcf.gz Dog4.CpG_report.merged_CpG_evidence.SNPfilt.cov
 
 # convert the (1-based) cov file to a 0-based BED format (subtract 1 from the second and third columns)
-zcat $3 | awk -v OFS='\t' '$2=$2-1' | awk -v OFS='\t' '$3=$3-1' > tmp.bed
+zcat $1 | awk -v OFS='\t' '$2=$2-1' | awk -v OFS='\t' '$3=$3-1' > tmp.bed
 # run bedtools intersect with the -v option; this will remove any loci in the BED file that overlap with SNP positions in the VCF file
 bedtools intersect -a tmp.bed -b $2 -v > tmp2.bed
 # reformat the output BED file back into 1-based cov file (add 1 back second and third columns)
