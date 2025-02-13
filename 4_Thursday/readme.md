@@ -217,8 +217,43 @@ Note that there are 4 transcript entries missing. I suspect a small number were 
 ## Exercises:
 * Perform the DMR analysis for the environmental comparison (MM vs MF)
 * Are any promoter regions differentially methylated in both comparisons?
-* What happens if you use non-SNP-filtered counts files? does this affect the number of DMRs found?
+* What is the relative distribution of hyper- and hypomethylated regions?
+* Is there a difference in the distribution of covered features (exons, promoters etc.) between hypo- and hyper-DMRs?
+* Do these two classes of DMRs appear to be related to different functions?
+* How do parameters such as site coverage and number of CpGs in the windows influence DMR detection?
 
+### OPTIONAL: GO term enrichment analysis
+
+Enrichment analysis tests for whether certain functional categories (e.g. GO terms) are enriched amongst gene lists (e.g. differentially expressed or differentially methylated), compared to a background. The results can depend on many factors including the completeness / quality of functional annotation and the choice of background set. Ideally the background should be genes (or transcripts in this case) that are represented in the analysis (i.e. covered in the DMR analysis). Results of these can give some vague indication of what processes might be affected, but they should be taken with a pinch of salt (particularly as the functional annotation usually comes from homology to model organisms, and is usually not very extensive in nonmodels). I include this as a demonstration of how it is done using information from ENSEMBL annotation and with the clusterProfiler package, but this should not be considered an essential step.
+
+```
+library(clusterProfiler)
+# For our background, we want the transcript IDs of all promoters covered by the differential methylation analysis
+Diff_pops_Ann<-annotateWithGeneParts(as(Diff_pops,"GRanges"),gene.obj)
+# see how many transcript promoters are covered
+all_covered_transcripts<-levels(as.factor(Diff_pops_Ann@dist.to.TSS$feature.name))
+length(all_covered_transcripts)
+
+query_goterms<-getBM(attributes = c('ensembl_transcript_id','go_id','name_1006'),
+                     values = all_covered_transcripts, 
+                     filters='ensembl_transcript_id',
+                     mart = ensembl)
+head(query_goterms)
+
+# subset for biological processes
+query_goterms_bp<-subset(query_goterms,namespace_1003=="biological_process")
+
+# set up the maps linking (1) go terms with go term names and (2) go terms with transcript IDs
+term2name<-query_goterms_bp[c(2,3)]
+term2gene<-query_goterms_bp[c(2,1)]
+# the universe, a.k.a. background -> should be all the transcripts covered that also have some GO annotation
+
+# run the enricher() function
+enricher(gene = DM_promoters$feature.name,TERM2GENE = term2gene, TERM2NAME = term2name,universe = all_covered_transcripts,pAdjustMethod = "fdr", pvalueCutoff = 0.1)
+
+# How do the results differ between hypo- and hypermethylated genes?
+# Is anything enriched amongst promoters that are differentially methylated in both experimental and population comparisons?
+```
 Appendix: Obtaining BED12 file of stickleback transcripts
 The stickleback V5 gff3 annotation was obtained (https://stickleback.genetics.uga.edu/downloadData/) and converted it to BED12 format (for use with genomation) with the AGAT toolkit:
 ```
