@@ -7,13 +7,31 @@
 
 This is the Readme file for the session on Thursday, where we will cover differential DNA methylation analysis in `R`. All the data you'll need for this will be stored in: 
 
-`~/Share/4_Thursday/`
+https://drive.google.com/drive/folders/1cGRQGoylbbWUzECj_ATLJIyHoBPCwNOn?usp=sharing
 
+The R packages we need are:
+```
+library(methylKit)
+library(matrixStats)
+library(dplyr)
+library(ggplot2)
+library(biomaRt)
+library(genomation)
+library(genomicRanges)
+```
+And optionally:
+```
+library(clusterProfiler) # for GO term enrichment, if desired
+library(DSS) # for alternative DMC/DMR calling with DSS
+require(bsseq)
+```
 ## Overview
 
 In this workshop we will quantify DNAme and calculate differential DNA methylation from RRBS data from threespine stickleback (G. aculeatus). The RRBS derived from gill tissue derived from either marine or freshwater / lake populations. The data were originally published by Artemov et al (2017) (https://academic.oup.com/mbe/article/34/9/2203/3813257) and subsequently re-analysed by Ord et al (2023) (https://academic.oup.com/mbe/article/40/4/msad068/7083720). Sticklebacks are an interesting system to study adaptive evolution and plasticity, as they have repeatedly colonised freshwater habitats from ancestral marine environments, resulting in distinct marine and lake morphs, the latter being adapted to lower salinity. Whether epigenetic variation plays a role in this adaptation has been a question of gret interest. We will use a subset of the data to facilitate two comparisons: (1) a 'population' comparison between marine vs freshwater fish each kept at their native salinities (marine fish kept in seawater vs freshwater fish kept in lake water), and (2) an experimental comparison between marine fish in native salinity vs marine fish kept in lake water.
 
 We will start with methylation counts files (.cov.gz) output from bismark_methylation_extractor after aligning RRBS reads to the stickleback V5 genome assembly (https://stickleback.genetics.uga.edu/downloadData/). All sites are reference CpG context. The counts files were SNP-filtered using a combination of SNP-callers performed on the RRBS data themselves (BS-SNPer, Biscuit, and CGmaptools). The non-SNP-filtered counts files are also provided, however. We will analyse these files using the R package methylKit, a popular package for differential methylation analyses.
+
+An additional script is provided to process the same data using a different package, DSS.
 
 ## Workflow
 
