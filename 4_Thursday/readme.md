@@ -17,7 +17,7 @@ library(dplyr)
 library(ggplot2)
 library(biomaRt)
 library(genomation)
-library(genomicRanges)
+library(GenomicRanges)
 ```
 And optionally:
 ```
