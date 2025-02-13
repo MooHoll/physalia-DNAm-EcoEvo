@@ -170,6 +170,29 @@ ggplot(subset(DMdata,chr=="chrI"),aes(x=start,y=meth.diff))+
          geom_point(aes(fill=result),pch=21,alpha=0.5)+
   scale_fill_manual(values=c("red","blue","grey"))
 ```
+A basic heatmap can also be made. This works best if you have a smaller number of DMRs (e.g. with the biggest % meth differences or in larger windows.
+```
+# HEATMAP OF SOME DMRs
+library(pheatmap)
+# get the DMRs according to criteria and make an index based on the chromosome names and start pos.
+DMdata_DM<-subset(DMdata,result!="non_DM" & abs(meth.diff)> 25 & qvalue<0.01)
+DMdata_DM$index<-paste(DMdata_DM$chr,DMdata_DM$start,sep="_")
+
+# get data frame of percentage meth per sample (derived from percMethylation(meth) earlier)
+meth2<-as.data.frame(pm)
+# add an index from the object 'DMdata' (derived from getData(Diff_pops) earlier)
+# --> the rows should be in the same order in DMdata as they are in the & meth dataframe
+meth2$index<-paste(DMdata$chr,DMdata$start,sep="_")
+rownames(meth2)<-meth2$index # replace rownames with the index
+
+# now we can subset the % meth dataframe for only the indexes corresponding with DMRs
+meth3<-subset(meth2,index %in% DMdata_DM$index)[-10] # last part removes the index column
+# convert to matrix
+meth3mat<-as.matrix(meth3)
+
+pheatmap(meth3mat,clustering_method = "complete")
+```
+
 ### Intersecting with gene structure annotation
 methylKit objects can be used with functions from the genomation package to incorporate gene structure annotation.
 ```
