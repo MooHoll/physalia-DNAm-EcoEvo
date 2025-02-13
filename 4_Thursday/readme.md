@@ -149,7 +149,7 @@ Diff_pops is now a methylKit object that contains information pertaining to diff
 ```
 # e.g., get all DMRs with criteria of 25% difference in methylation level at q < 0.01
 Diff_pops_25p<-getMethylDiff(Diff_pops,difference=25,qvalue=0.05)
-Diff_pops_25p # reveals 1,639 DMRs at these criteria
+Diff_pops_25p
 # get only hypermethylated (increased methylation in freshwater):
 Diff_pops_25p.hyper<-getMethylDiff(Diff_pops,difference=25,qvalue=0.05,type="hyper")
 ```
