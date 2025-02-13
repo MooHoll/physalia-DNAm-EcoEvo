@@ -81,8 +81,6 @@ unite() will drop windows that are not covered in all samples
 ```
 # merge samples
 meth<-unite(tiles)
-# optional - nullify objects we no longer need
-myobj<-NULL; tiles<-NULL
 ```
 sometimes we may want to remove chromosomes (e.g. sex chromosomes, organelles)
 ```
