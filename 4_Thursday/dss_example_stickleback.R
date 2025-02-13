@@ -7,7 +7,7 @@ require(bsseq)
 ####################
 
 # Read in all files
-file.list = list.files("./stickleback_cov_files_130225/",full.names = T)
+file.list = list.files("./stickleback_cov_files/",full.names = T)
 
 # The data needs to be in a slightly specific format
 # Unlike the default .cov format read by bismark, we have columns for chr, pos, coverage (N) and methyl count (X)
