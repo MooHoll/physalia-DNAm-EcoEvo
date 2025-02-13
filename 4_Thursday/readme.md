@@ -184,13 +184,15 @@ meth2<-as.data.frame(pm)
 # --> the rows should be in the same order in DMdata as they are in the & meth dataframe
 meth2$index<-paste(DMdata$chr,DMdata$start,sep="_")
 rownames(meth2)<-meth2$index # replace rownames with the index
+# (this is useful if you want to show the chrom_pos on the heatmap,
+# but only works well if you have a small number of DMRs)
 
 # now we can subset the % meth dataframe for only the indexes corresponding with DMRs
 meth3<-subset(meth2,index %in% DMdata_DM$index)[-10] # last part removes the index column
 # convert to matrix
 meth3mat<-as.matrix(meth3)
 
-pheatmap(meth3mat,clustering_method = "complete")
+pheatmap(meth3mat,clustering_method = "complete", show_rownames=F)
 ```
 
 ### Intersecting with gene structure annotation
