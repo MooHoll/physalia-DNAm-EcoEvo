@@ -170,8 +170,8 @@ ggplot(subset(DMdata,chr=="chrI"),aes(x=start,y=meth.diff))+
          geom_point(aes(fill=result),pch=21,alpha=0.5)+
   scale_fill_manual(values=c("red","blue","grey"))
 ```
-### Intersecting with functional annotation
-methylKit objects can be used with functions from the genomation package to incorporate functional annotation.
+### Intersecting with gene structure annotation
+methylKit objects can be used with functions from the genomation package to incorporate gene structure annotation.
 ```
 library("genomation")
 ```
