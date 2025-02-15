@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Use bedtools to filter a CpG-merged bismark cov file directly for SNPs.
+# Use bedtools to filter a CpG-merged bismark cov file directly for SNPs from a VCF file.
+# James Ord
 # This accounts for SNPs at the neighbouring C on the opposite strand.
 # requires bedtools (should be installed in conda environment already)
 
@@ -8,6 +9,9 @@
 # specify output name without .gz; gzip is run at the end
 # should work on either compressed or uncompressed inputs
 # this could be repeated for multiple VCFs, e.g. from multiple SNP callers
+
+# NOTE: I have not tested this on g.vcf files from GATK HaplotypeCaller
+# It should work as long as they are filtered only for SNP positions, i.e. remove the monomorphic haplotype blocks first
 
 # e.g.:
 # sh filter_SNPs_from_covfile2.sh Dog4.CpG_report.merged_CpG_evidence.cov.gz Dog-4.g.vcf.gz Dog4.CpG_report.merged_CpG_evidence.SNPfilt.cov
