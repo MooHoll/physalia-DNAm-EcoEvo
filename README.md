@@ -6,15 +6,15 @@ https://www.physalia-courses.org/
 
 ### Hollie Marshall, James Ord, Alexandre de Mendoza
 
-#### 10th &ndash; 14th February, 2025
+#### 20th &ndash; 24th April, 2026
 
 ## Overview
 
-Epigenetic studies on DNA methylation are now possible to do at the nucleotide level genome-wide and also in non-model organisms. In this course, we will introduce the different available approaches for obtaining and analysing DNA methylation data, including bisulfite sequencing (BS-seq, EM-seq) with Ilumina and long reads with Oxford Nanopore. We will also touch on PacBio long-read analysis. We will cover all necessary steps to obtain methylation information from high throughput data to statistical analyses used to identify differentially methylated sites and regions. The data will be interpreted in terms of their biological importance in the field of ecology and evolution.
+Epigenetic studies on DNA methylation are now possible to do at the nucleotide level genome-wide and also in non-model organisms. In this course, we will introduce the different available approaches for obtaining and analysing DNA methylation data, including bisulfite sequencing (BS-seq/WGBS, EM-seq, RRBS) with Ilumina and long reads with Oxford Nanopore. We will also touch on PacBio long-read analysis. We will cover all necessary steps to obtain methylation information from high throughput data to statistical analyses used to identify differentially methylated sites and regions. The data will be interpreted in terms of their biological importance in the field of ecology and evolution.
 
 ## Target audience and assumed background
 
-This course is aimed at researchers and technical workers who are or who will be generating and/or analysing DNA methylation from whole genome bisulfite sequencing data from IIlumina, PacBio data or Nanopore data. Examples demonstrated in this course will involve primarily non-model organisms with a draft reference genome available and examples of applications of this data type for different purposes will be covered.
+This course is aimed at researchers and technical workers who are or who will be generating and/or analysing DNA methylation from whole genome bisulfite sequencing data (or enzymatic-sequencing data) from IIlumina or Nanopore data. Examples demonstrated in this course will involve primarily non-model organisms with a draft reference genome available and examples of applications of this data type for different purposes will be covered. All code and pipelines are also suitable for model organisms such as mouse/human.
 
 To make the most of this course, you should already be familiar with working on `command line interfaces` (high performance computing clusters) and `R`.
 
@@ -23,7 +23,7 @@ To make the most of this course, you should already be familiar with working on 
 ### Monday: DNA methylation analysis with short reads (Illumina WGBS and EM-Seq) – 2-7pm Berlin time
 
 1. Presentation: Origin and evolution of DNA methylation in eukaryotes: from parasite defence to gene regulation.
-2. Presentation: Introduction to short-read format and processing (WGBS/EM-Seq).
+2. Presentation: Introduction to short-read format and processing (WGBS/EM-Seq/RRBS).
 3. Lab 1: Short-read processing:
 * QC, filtering, trimming
 * Genome preparation
@@ -50,7 +50,7 @@ To make the most of this course, you should already be familiar with working on 
 
 ### Thursday: Identification of differentially methylated sites and regions and integration with SNP data – 2-7pm Berlin time
 
-1. Presentation: DNAm and genetic variation: biological insights and analytical hazards.
+1. Presentation: Introduction to epigenetic clocks.
 2. Presentation: Introduction to differential DNA methylation.
 3. Lab 4: Differential DNA methylation:
 * Testing for differentially methylated sites and regions between populations and conditions
@@ -58,11 +58,12 @@ To make the most of this course, you should already be familiar with working on 
 * Accounting for SNPs
 
 ### Friday: Integration of DNA methylation and gene expression and open session on your own data / experiments – 2-7pm Berlin time
-1. Lab 5: Integration of DNA methylation and gene expression:
+1. Presentation: DNAm and genetic variation: biological insights and analytical hazards.
+2. Lab 5: Integration of DNA methylation and gene expression:
 * Quantifying genes/exon/intron levels
 * Correlational plots
 * Overlap of differential methylation and differential expression
-2. Open session: Group questions / discussion:
+3. Open session: Group questions / discussion:
 * Follow up on any course material
 * Student questions on their own data / experimental plans
 
