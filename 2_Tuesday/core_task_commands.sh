@@ -88,10 +88,13 @@ deduplicate_bismark Col0_subsample.trimmed_bismark_bt2.bam
 bismark_methylation_extractor --multicore 3 --comprehensive --bedGraph --report --cytosine_report \
 --genome_folder ./TAIR10_genome/ Col0_subsample.trimmed_bismark_bt2.bam
 
-# Examine the M-bias plots on your computer using Filezilla or the below copy command
+# Make a report of everything to look at
+bismark2report ./ # ensure you put all sample output files in the same diretory
+
+# Examine the report on your computer using Filezilla or the below copy command, what do you think of the M-bias plot?
 exit # to exit the server
 cd ~/Desktop # somewhere convenient on your computer
-scp -i <YOUR>.pem <user>@34.209.238.173://home/ubuntu/*.png ./ # edit this for your specific login details and path
+scp -i <YOUR>.pem <user>@34.209.238.173://home/ubuntu/*.html ./ # edit this for your specific login details and path
 
 # Log back into the server
 # Re-ativate the conda environment
