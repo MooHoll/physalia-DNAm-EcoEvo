@@ -57,8 +57,7 @@ This file contains nearly 40 million short reads. To process all of these in thi
 
 Subsampling can be performed quickly using the `reformat.sh` script from the bbtools suite:
 ```
-source /opt/miniconda3/bin/activate
-conda activate /home/ubuntu/miniconda3/envs/short_read # activate the conda environment
+conda activate /opt/miniconda3/envs/short_read # activate the conda environment
 
 reformat.sh in=~/Share/1_Monday/raw_data_for_alignment/Col-0/SRR771698.fastq.gz out=Col0_subsample.fastq.gz samplerate=0.1
 ```
