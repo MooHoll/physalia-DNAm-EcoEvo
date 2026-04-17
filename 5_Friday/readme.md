@@ -13,7 +13,7 @@ This is the Readme file for the session on Friday, where we will cover genome-wi
 
 ## Overview
 
-Today we will work from files created on Day 2 (or Day 3), the final `coverage` files. We will calculate the methylation level over regions of the genome, such as exons, promoters or whole genes. Specifically we will calcultae the **weighted methylation level** for these genomic regions. These feature-specific methylation levels can then be correlated with gene expression or used for a number of other purposes depending on your project.
+Today we will work from files created on Day 2 (or Day 3), the final `coverage` files. We will calculate the methylation level over regions of the genome, such as exons, promoters or whole genes. Specifically we will calculate the **weighted methylation level** for these genomic regions. These feature-specific methylation levels can then be correlated with gene expression or used for a number of other purposes depending on your project.
 
 ## 1. Weighted methylation of a region
 Weighted methylation level is simply the sum of all Cs divided by the total coverage of a region. This allows us to take into account the number of CpGs per region and give more weight to those with more coverage. It is similar to the percentage methylation level per C, but across an entire region of interest.
