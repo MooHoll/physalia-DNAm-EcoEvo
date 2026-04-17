@@ -13,9 +13,9 @@ This is the Readme file for the session on Tuesday, where we will cover the seco
 
 Using the same data as yesterday, we will; examine the bisulfite conversion rate, extract readable DNA methylation C/T count data and account for genetic variation caused by SNPs.
 
-## 0. Finishing up from yesterday
+<> ## 0. Finishing up from yesterday
 
-The last step we need to complete from yesterday is to align our subsample of the reads (the .fastq file(s)) to the reference Arabidopsis genome. You can either read through the documentation on Monday, or take the commands from the `core_task_commands.sh` document to get you going.
+<> The last step we need to complete from yesterday is to align our subsample of the reads (the .fastq file(s)) to the reference Arabidopsis genome. You can either read through the documentation on Monday, or take the commands from the `core_task_commands.sh` document to get you going.
 
 ## 1. Examining the Bisulfite / Enzymatic conversion rate
 
