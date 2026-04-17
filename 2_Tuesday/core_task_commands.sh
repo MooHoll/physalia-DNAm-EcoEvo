@@ -100,7 +100,7 @@ scp -i <YOUR>.pem <user>@34.209.238.173://home/ubuntu/*.html ./ # edit this for 
 # Re-ativate the conda environment
 
 # Optional: merge strands
-coverage2cytosine -o Col0 --merge_CpGs --genome_folder ./TAIR10_genome/ Col0_subsample.trimmed_bismark_bt2.bam
+coverage2cytosine -o Col0 --merge_CpGs --genome_folder ./TAIR10_genome/ Col0_subsample.trimmed_bismark_bt2.bismark.cov.gz
 
 # ---------------------------------------------------------
 # 2c. Optional: Accounting for SNPs
