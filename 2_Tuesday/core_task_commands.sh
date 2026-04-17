@@ -7,7 +7,7 @@
 ssh -i <your_number>.pem user<number>@<IP_code>
 
 # Activate the conda environment
-conda activate /home/ubuntu/miniconda3/envs/short_read
+conda activate /opt/miniconda3/envs/short_read
 
 # ---------------------------------------------------------
 # 1a. Quality checking and adapter trimming
