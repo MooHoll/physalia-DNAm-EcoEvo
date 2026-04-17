@@ -18,9 +18,9 @@ We will cover from pod5 modification basecalling to basic visualization of the d
 In case you'd need to download Dorado (it is already installed in the instance for the course), you can rapidly do so by using (this is for Linux, other options on github): 
 
 ```
-wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.9.1-linux-x64.tar.gz
-tar -xvzf dorado-0.9.1-linux-x64.tar.gz
-export LD_LIBRARY_PATH=/pathToDorado/dorado-0.9.1-linux-x64/lib:$LD_LIBRARY_PATH
+wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-1.4.0-linux-x64.tar.gz
+tar -xvzf dorado-1.4.0-linux-x64.tar.gz
+export LD_LIBRARY_PATH=/home/ubuntu/Share/3_Wednesday/software/dorado-1.4.0-linux-x64/lib:$LD_LIBRARY_PATH
 ```
 and then download the base modification models using 
 
@@ -40,7 +40,7 @@ Please **don't run this** as it will just clog the server, but this is how we ha
 
 ```
 conda activate /opt/miniconda3/envs/longreads
-Share/3_Wednesday/software/dorado-0.9.1-linux-x64/bin/dorado basecaller --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/pod5_subset > F4_calls.bam
+Share/3_Wednesday/software/dorado-1.4.0-linux-x64/bin/dorado basecaller --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/pod5_subset > F4_calls.bam
 samtools sort -o F4_sorted.bam F4_calls.bam
 samtools index F4_sorted.bam
 ```
@@ -65,19 +65,19 @@ Modkit is the latest methylation calling algorithm from Nanopore. Before they ha
 Modkis has several functions available, one is a quick way to asses global methylation levels in the sampel. 
 
 ```
-/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.4.3_d13b97d/modkit summary -t 2 F4_sorted.bam
+/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.6.1_481e3c9/modkit summary -t 2 F4_sorted.bam
 ```
 This will give an overview of the bam file. 
 
 But what we really want is **pileup**.
 
 As with any softare, good to see options by doing: 
-`/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.4.3_d13b97d/modkit pileup`
+`/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.6.1_481e3c9/modkit pileup`
 
 For our test dataset we want to call methylation only on CpGs, this is an insect. Also, dorado used a CG model, so other contexts wouldn't work. 
 
 ```
-/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.4.3_d13b97d/modkit pileup \
+/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.6.1_481e3c9/modkit pileup \
 --ref /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 --threads 2 \
 --cpg \
@@ -128,7 +128,7 @@ tabix -p gff GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
 Methylartist can be installed via conda.
 
 ```
-conda activate /opt/miniconda3/envs/methylartist_env
+conda activate /opt/miniconda3/envs/longreads
 
 methylartist region \
 -i NC_088681.1:36215487-36221147 \
@@ -152,7 +152,7 @@ If your long reads have enough covarage and have enough quality (R10 better than
 
 Here we will do a toy example: 
 ```
-conda activate /opt/miniconda3/envs/clair3
+conda activate /opt/miniconda3/envs/clair3_clean
 
 echo -e "NC_088680.1\t70781301\t70886739" > locus.bed
 
@@ -202,7 +202,7 @@ In a real case scenario, you would simply run this with a vcf file for all conti
 Methylartist can take the haplogroup information to give phased methylation information: 
 
 ```
-conda activate /opt/miniconda3/envs/methylartist_env
+conda activate /opt/miniconda3/envs/longreads
 
 methylartist locus \
 -i NC_088680.1:70791301-70816739 \
