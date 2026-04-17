@@ -48,14 +48,13 @@ To make the most of this course, you should already be familiar with working on 
 * Modbam2bed/Modkit
 * Example: methylation haplophasing
 
-### Thursday: Identification of differentially methylated sites and regions and integration with SNP data – 2-7pm Berlin time
+### Thursday: Identification of differentially methylated sites and regions – 2-7pm Berlin time
 
 1. Presentation: Introduction to epigenetic clocks.
 2. Presentation: Introduction to differential DNA methylation.
 3. Lab 4: Differential DNA methylation:
 * Testing for differentially methylated sites and regions between populations and conditions
 * Visualising differential methylation
-* Accounting for SNPs
 
 ### Friday: Integration of DNA methylation and gene expression and open session on your own data / experiments – 2-7pm Berlin time
 1. Presentation: DNAm and genetic variation: biological insights and analytical hazards.
