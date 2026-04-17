@@ -39,7 +39,7 @@ In a real case scenario, you'll have to look at what is available for the techno
 Please **don't run this** as it will just clog the server, but this is how we have done the modification basecalling for the practical:
 
 ```
-conda activate /home/ubuntu/miniconda3/envs/longreads
+conda activate /opt/miniconda3/envs/longreads
 Share/3_Wednesday/software/dorado-0.9.1-linux-x64/bin/dorado basecaller --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/pod5_subset > F4_calls.bam
 samtools sort -o F4_sorted.bam F4_calls.bam
 samtools index F4_sorted.bam
@@ -128,7 +128,7 @@ tabix -p gff GCF_950023065.1_ihPlaCitr1.1_genomic.gtf.bgz
 Methylartist can be installed via conda.
 
 ```
-conda activate /home/ubuntu/miniconda3/envs/methylartist_env
+conda activate /opt/miniconda3/envs/methylartist_env
 
 methylartist region \
 -i NC_088681.1:36215487-36221147 \
@@ -152,14 +152,14 @@ If your long reads have enough covarage and have enough quality (R10 better than
 
 Here we will do a toy example: 
 ```
-conda activate /home/ubuntu/miniconda3/envs/clair3
+conda activate /opt/miniconda3/envs/clair3
 
 echo -e "NC_088680.1\t70781301\t70886739" > locus.bed
 
 run_clair3.sh --bam_fn=F4_sorted.bam \
 --ref_fn=/home/ubuntu/Share/3_Wednesday/rawdata/GCF_950023065.1_ihPlaCitr1.1_genomic.fa \
 --threads=2 --platform="ont" \
---model_path=/home/ubuntu/miniconda3/envs/clair3/bin/models/ont \
+--model_path=/opt/miniconda3/envs/clair3/bin/models/ont \
 --output=clair3_subset --enable_phasing --include_all_ctgs \
 --bed_fn=locus.bed
 
@@ -174,7 +174,7 @@ The file `locus.bed` is simply to subset the variant calling to small region of 
 First you need to tag your haplogroups found with clair3
 
 ```
-conda activate /home/ubuntu/miniconda3/envs/whatshap-env
+conda activate /opt/miniconda3/envs/whatshap-env
 
 samtools view -b F4_sorted.bam -L locus.bed > locus.bam
 samtools index locus.bam
@@ -202,7 +202,7 @@ In a real case scenario, you would simply run this with a vcf file for all conti
 Methylartist can take the haplogroup information to give phased methylation information: 
 
 ```
-conda activate /home/ubuntu/miniconda3/envs/methylartist_env
+conda activate /opt/miniconda3/envs/methylartist_env
 
 methylartist locus \
 -i NC_088680.1:70791301-70816739 \
