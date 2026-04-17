@@ -52,7 +52,7 @@ bismark --multicore 2 --genome ./TAIR10_genome/ Col0_subsample.trimmed.fastq.gz
 #bismark --multicore 2 --genome ./TAIR10_genome/ -1 SRR3301595_1.fastq.gz -2 SRR3301595_2.fastq.gz
 
 # Examine the output report file
-nano Col0_subsample.trimmed.fastq_bismark_bt2_PE_report.txt
+nano Col0_subsample.trimmed_bismark_bt2_SE_report.txt
 
 # What is the alignment rate?
 # What is the level of DNA methylation?
@@ -66,13 +66,13 @@ cp -r ~/Shared/2_Tuesday/TAIR10_chloroplast/ ./
 bismark_genome_preparation ./TAIR10_chloroplast
 
 # As above - single end alignment
-bismark --prefix chloroplast --multicore 2 --genome ./TAIR10_genome/ Col0_subsample.trimmed.fastq.gz
+bismark --prefix chloroplast --multicore 2 --genome ./TAIR10_chloroplast/ Col0_subsample.trimmed.fastq.gz
 
 # Paired end alignment
 # bismark --prefix chloroplast --multicore 2 --genome ./TAIR10_chloroplast/ -1 SRR3301595_1.fastq.gz -2 SRR3301595_2.fastq.gz
 
 # Examine the output files
-nano chloroplast.Col0_subsample.trimmed.fastq_bismark_bt2_PE_report.txt 
+nano chloroplast.Col0_subsample.trimmed_bismark_bt2_SE_report.txt 
 
 # What is the alignment rate?
 # What is the level of DNA methylation?
@@ -82,11 +82,11 @@ nano chloroplast.Col0_subsample.trimmed.fastq_bismark_bt2_PE_report.txt
 # ---------------------------------------------------------
 
 # Deduplicate your .bam alignments (the ones aligned to the arabidopsis genome, not the chloroplast genome)
-deduplicate_bismark Col0_subsample.trimmed.fastq_bismark_bt2.bam
+deduplicate_bismark Col0_subsample.trimmed_bismark_bt2.bam
 
 # Extract the methylation data
 bismark_methylation_extractor --multicore 3 --comprehensive --bedGraph --report --cytosine_report \
---genome_folder ./TAIR10_genome/ Col0_subsample.trimmed.fastq_bismark_bt2.bam
+--genome_folder ./TAIR10_genome/ Col0_subsample.trimmed_bismark_bt2.bam
 
 # Examine the M-bias plots on your computer using Filezilla or the below copy command
 exit # to exit the server
@@ -97,7 +97,7 @@ scp -i <YOUR>.pem <user>@34.209.238.173://home/ubuntu/*.png ./ # edit this for y
 # Re-ativate the conda environment
 
 # Optional: merge strands
-coverage2cytosine -o Col0 --merge_CpGs --genome_folder ./TAIR10_genome/ Col0_subsample.trimmed.fastq_bismark_bt2.bam
+coverage2cytosine -o Col0 --merge_CpGs --genome_folder ./TAIR10_genome/ Col0_subsample.trimmed_bismark_bt2.bam
 
 # ---------------------------------------------------------
 # 2c. Optional: Accounting for SNPs
