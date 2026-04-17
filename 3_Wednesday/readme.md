@@ -43,7 +43,7 @@ conda activate /opt/miniconda3/envs/longreads
 /home/ubuntu/Share/3_Wednesday/software/dorado-1.4.0-linux-x64/bin/dorado basecaller --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_932526225.1_jaNemVect1.1_genomic.fna sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/rawdata/pod5 > Sample.bam
 samtools sort -o Sample_sorted.bam Sample.bam
 samtools index Sample_sorted.bam
-samtools view -b -h Sample_sorted.bam "NC_064035.1:4600000-4700000" > Locus_sorted.bam
+samtools view Sample_sorted.bam "NC_064035.1:4600000-4700000" -o Locus_sorted.bam
 ```
 
 Besides the GPUs, if you have enough CPUs, you can always take advantage of that, using extra cores for samtools with `-@ 10`. 
