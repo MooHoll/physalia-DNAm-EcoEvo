@@ -3,7 +3,7 @@
 ### Physalia-Courses 
 
 # Long-reads workshop  // 22nd April, 2026
-### Instructor Alex de Mendoza
+### Instructor Alex de Mendoza (background help Dr. Richard Heery)
 
 This is the Readme file for the session on Wednesday, where we will cover the ONT analysis. All the data you'll need for this will be stored in: 
 
@@ -40,9 +40,10 @@ Please **don't run this** as it will just clog the server, but this is how we ha
 
 ```
 conda activate /opt/miniconda3/envs/longreads
-/home/ubuntu/Share/3_Wednesday/software/dorado-1.4.0-linux-x64/bin/dorado basecaller --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_932526225.1_jaNemVect1.1_genomic.fna sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/rawdata/pod5 > F4_calls.bam
-samtools sort -o F4_sorted.bam F4_calls.bam
-samtools index F4_sorted.bam
+/home/ubuntu/Share/3_Wednesday/software/dorado-1.4.0-linux-x64/bin/dorado basecaller --reference /home/ubuntu/Share/3_Wednesday/rawdata/GCF_932526225.1_jaNemVect1.1_genomic.fna sup,5mCG_5hmCG /home/ubuntu/Share/3_Wednesday/rawdata/pod5 > Sample.bam
+samtools sort -o Sample_sorted.bam Sample.bam
+samtools index Sample_sorted.bam
+samtools view -b -h Sample_sorted.bam "NC_064035.1:4600000-4700000" > Locus_sorted.bam
 ```
 
 Besides the GPUs, if you have enough CPUs, you can always take advantage of that, using extra cores for samtools with `-@ 10`. 
@@ -51,8 +52,8 @@ This bam file contains your reads aligned to the reference genome, with the spec
 
 ```
 ln -s /home/ubuntu/Share/3_Wednesday/rawdata/F4_sorted.bam
-samtools index F4_sorted.bam
-samtools view F4_sorted.bam | head
+samtools index Locus_sorted.bam
+samtools view Locus_sorted.bam | head
 ```
 
 In case you're curious, our reads belong to *Nematostella vectensis* (starlet sea anemone), and for demonstration purposes it is only the region NC_064035.1:4600000-4700000. 
@@ -65,7 +66,7 @@ Modkit is the latest methylation calling algorithm from Nanopore. Before they ha
 Modkis has several functions available, one is a quick way to asses global methylation levels in the sampel. 
 
 ```
-/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.6.1_481e3c9/modkit summary -t 2 F4_sorted.bam
+/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.6.1_481e3c9/modkit summary -t 2 Locus_sorted.bam
 ```
 This will give an overview of the bam file. 
 
@@ -85,7 +86,7 @@ For our test dataset we want to call methylation only on CpGs, this is an insect
 --combine-strands \
 --modified-bases 5mC \
 /home/ubuntu/Share/3_Wednesday/rawdata/Locus_sorted.bam \
-F4_modkit.bedMethyl
+Locus_modkit.bedMethyl
 ```
 This settings only focus on CpGs and combine information from Watson and Crick strand in a single value, all that makes it easier/compact, but depending on analysis, you might want it. Also ignores "h", which is the hydroxmethylation calling. Probably not a great idea for this organism. 
 
@@ -97,14 +98,14 @@ To understand the bedMethyl format, check modkit [github repo](https://github.co
 
 Most important columns, 5 (coverage) and 11 (methylation fraction). Let's make two files to visualize in the genome browser. 
 ```
-cat F4_modkit.bedMethyl | awk '{print $1,$2,$3,$11}' OFS="\t" > F4_modkit.mCG.bedGraph
-cat F4_modkit.bedMethyl | awk '{print $1,$2,$3,$5}' OFS="\t" > F4_modkit.cov.bedGraph
+cat Locus_modkit.bedMethyl | awk '{print $1,$2,$3,$11}' OFS="\t" > Locus_modkit.mCG.bedGraph
+cat Locus_modkit.bedMethyl | awk '{print $1,$2,$3,$5}' OFS="\t" > Locus_modkit.cov.bedGraph
 ```
 These files could be uploaded directly to the genome browser, but to keep it tidy and quick, let's binarise them into bigwig format, using the UCSC tool [bedGraphToBigWig](https://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig).
 
 ```
-/home/ubuntu/Share/3_Wednesday/software/bedGraphToBigWig F4_modkit.mCG.bedGraph /home/ubuntu/Share/3_Wednesday/rawdata/GCF_932526225.1_jaNemVect1.1_genomic.fna.fai F4_modkit.mCG.bigwig
-/home/ubuntu/Share/3_Wednesday/software/bedGraphToBigWig F4_modkit.cov.bedGraph /home/ubuntu/Share/3_Wednesday/rawdata/GCF_932526225.1_jaNemVect1.1_genomic.fna.fai F4_modkit.cov.bigwig
+/home/ubuntu/Share/3_Wednesday/software/bedGraphToBigWig Locus_modkit.mCG.bedGraph /home/ubuntu/Share/3_Wednesday/rawdata/GCF_932526225.1_jaNemVect1.1_genomic.fna.fai Locus_modkit.mCG.bigwig
+/home/ubuntu/Share/3_Wednesday/software/bedGraphToBigWig Locus_modkit.cov.bedGraph /home/ubuntu/Share/3_Wednesday/rawdata/GCF_932526225.1_jaNemVect1.1_genomic.fna.fai Locus_modkit.cov.bigwig
 ```
 Download this data into your own computer, together with fasta file and annotation file. 
 ```
