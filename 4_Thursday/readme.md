@@ -7,7 +7,7 @@
 
 This is the Readme file for the session on Thursday, where we will cover differential DNA methylation analysis in `R`. All the data you'll need for this will be stored in: 
 
-https://drive.google.com/drive/folders/1cGRQGoylbbWUzECj_ATLJIyHoBPCwNOn?usp=sharing
+[https://drive.google.com/drive/folders/1cGRQGoylbbWUzECj_ATLJIyHoBPCwNOn?usp=sharing](https://drive.google.com/drive/folders/1YILPV5wAoAwAh4kkBHpVl0QkDSEPOsJ5?usp=sharing)
 
 The R packages we need are:
 ```
@@ -27,32 +27,32 @@ require(bsseq)
 ```
 ## Overview
 
-In this workshop we will quantify DNAme and calculate differential DNA methylation from RRBS data from threespine stickleback (G. aculeatus). The RRBS derived from gill tissue derived from either marine or freshwater / lake populations. The data were originally published by Artemov et al (2017) (https://academic.oup.com/mbe/article/34/9/2203/3813257) and subsequently re-analysed by Ord et al (2023) (https://academic.oup.com/mbe/article/40/4/msad068/7083720). Sticklebacks are an interesting system to study adaptive evolution and plasticity, as they have repeatedly colonised freshwater habitats from ancestral marine environments, resulting in distinct marine and lake morphs, the latter being adapted to lower salinity. Whether epigenetic variation plays a role in this adaptation has been a question of gret interest. We will use a subset of the data to facilitate two comparisons: (1) a 'population' comparison between marine vs freshwater fish each kept at their native salinities (marine fish kept in seawater vs freshwater fish kept in lake water), and (2) an experimental comparison between marine fish in native salinity vs marine fish kept in lake water.
+In this workshop we will quantify DNAme and calculate differential DNA methylation from RRBS data from threespine stickleback (G. aculeatus). The RRBS derived from gill tissue derived from either marine or freshwater / lake populations. The data were originally published by Artemov et al (2017) (https://academic.oup.com/mbe/article/34/9/2203/3813257). Sticklebacks are an interesting system to study adaptive evolution and plasticity, as they have repeatedly colonised freshwater habitats from ancestral marine environments, resulting in distinct marine and lake morphs, the latter being adapted to lower salinity. Whether epigenetic variation plays a role in this adaptation has been a question of gret interest. We will use a subset of the data to facilitate two comparisons: (1) a 'population' comparison between marine vs freshwater fish each kept at their native salinities (marine fish kept in seawater vs freshwater fish kept in lake water), and (2) an experimental comparison between marine fish in native salinity vs marine fish kept in lake water.
 
-We will start with methylation counts files (.cov.gz) output from bismark_methylation_extractor after aligning RRBS reads to the stickleback V5 genome assembly (https://stickleback.genetics.uga.edu/downloadData/). All sites are reference CpG context. The counts files were SNP-filtered using a combination of SNP-callers performed on the RRBS data themselves (BS-SNPer, Biscuit, and CGmaptools). The non-SNP-filtered counts files are also provided, however. We will analyse these files using the R package methylKit, a popular package for differential methylation analyses.
+We will start with methylation counts files (.cov.gz) output from bismark_methylation_extractor after aligning RRBS reads to the stickleback V5 genome assembly obtained from the ENSEMBL database ([https://stickleback.genetics.uga.edu/downloadData/](https://www.ensembl.org/Gasterosteus_aculeatus/Info/Index)). All sites are reference CpG context. Sites were not SNP-filtered. We will analyse these files using the R package methylKit, a popular package for differential methylation analyses.
 
 An additional script is provided to process the same data using a different package, DSS.
 
 ## Workflow
 
 ### Reading in files / initial processing
-Download the folder 'Stickleback_covfiles_SNPfilt' from the server into your working directory, either using a file transfer client like filezilla or using the sftp command on a local terminal.
-Once they are accessible on your local computer, we can read them into R with methylKit's methRead() function. Note here that we specify that the counts files derived from bismark, and that we set a minimum coverage of 5 at each site.
+Download the folder 'cov_files' from the server into your working directory, either using a file transfer client like filezilla or using the sftp command on a local terminal.
+Once they are accessible on your local computer, we can read them into R with methylKit's methRead() function. Note here that we specify that the counts files derived from bismark, and that we set a minimum coverage of 3 at each site.
 ```
 #set path to methylation files
-meth_path<-"Stickleback_covfiles_SNPfilt/"
+meth_path<-"cov_files/"
 # make a list of the files
 file.list<-as.list(list.files(meth_path,pattern = "\\.cov.gz$",full.names = TRUE))
 
 # Generate the initial methylKit object with methRead
 myobj<-methRead(file.list,
-                sample.id=as.list(c("FF1","FF2","FF3",
-                                  "MF1","MF2","MF3",
-                                  "MM1","MM2","MM3")),
+                sample.id=as.list(c("MM1","MM3","MM4",
+                                  "MF3","MF4","MF5",
+                                  "FF2","FF3","FF4")),
                 assembly="stickleback_v5",
-                treatment=c(1,1,1,2,2,2,0,0,0),
+                treatment=c(0,0,0,1,1,1,2,2,2),
                 context="CpG",
-                mincov = 5,
+                mincov = 3,
                 pipeline = "bismarkCoverage"
 )
 ```
@@ -64,7 +64,7 @@ filtered.myobj=filterByCoverage(myobj,lo.count=5,lo.perc=NULL,
 ```
 tileMethylCounts() summarises the counts into windows
 ```
-tiles<-tileMethylCounts(myobj,win.size=1000,step.size=1000,cov.bases = 5)
+tiles<-tileMethylCounts(myobj,win.size=1000,step.size=1000,cov.bases = 4)
 ```
 Some initial plotting of methylation distributions of individual samples:
 ```
@@ -86,8 +86,10 @@ sometimes we may want to remove chromosomes (e.g. sex chromosomes, organelles)
 ```
 # see which chromosomes are represented
 levels(as.factor(meth$chr))
-# Remove the Mitochondrion; We will leave in the Y chromosome and as all the individuals are reportedly male
-meth<-meth[meth$chr!="chrM", ]
+# We will leave in the Y chromosome and as all the individuals are reportedly male, but if we wanted to:
+# meth<-meth[meth$chr!="Y", ]
+# We may however want to remove unplaced contigs: these often contain highly repetitive sequences where many reads may not have properly mapped.
+meth<-meth[meth$chr%not_like%"JACDQR", ]
 ```
 ### Overview of methylation levels and variance
 We saw above that one can plot the distributions of methylation levels for individual samples in the non-united object. We can also visualise means and variances using methylation levels extracted from the united object.
@@ -99,7 +101,7 @@ head(pm)
 # get the mean methylation leves of all sites or windows
 methmeans<-rowMeans(pm)
 
-# what about a specific group? Here the 'MM' samples are in columns 7,8, and 9 of the matrix
+# what about a specific group? Here the 'FF' samples are in columns 7,8, and 9 of the matrix
 methmeans_MM<-rowMeans(pm[,c(7,8,9)])
 methSDs_MM<-rowSds(pm[,c(7,8,9)])
 # plot the mean and SD
@@ -132,7 +134,7 @@ methylKit differential methylation analyses are limited to two-group comparisons
 
 Let's perform a differential methylation comparison between marine and freshwater fish. We first need to create a new methylKit object with only these six samples.
 ```
-meth_pops <- reorganize(meth,sample.ids=c("MM1","MM2","MM3","FF1","FF2","FF3"),
+meth_pops <- reorganize(meth,sample.ids=c("MM1","MM3","MM4","FF2","FF3","FF4"),
                            treatment=c(0,0,0,1,1,1))
 ```
 Next, calculateDiffMeth() will actually perform the logistic-regression based calculations of differential methylation. This will produce the methylation difference and q-value (equivalent to an adjusted p-value) for each region (or site, if performing site-level analysis):
@@ -166,19 +168,20 @@ nrow(subset(DMdata,result=="hyper"))
 nrow(subset(DMdata,result=="non_DM"))
 
 # make a plot of meth. differences on chromosome 1
-ggplot(subset(DMdata,chr=="chrI"),aes(x=start,y=meth.diff))+
+ggplot(subset(DMdata,chr=="I"),aes(x=start,y=meth.diff))+
          geom_point(aes(fill=result),pch=21,alpha=0.5)+
   scale_fill_manual(values=c("red","blue","grey"))
 ```
 A basic heatmap can also be made. This works best if you have a smaller number of DMRs (e.g. with the biggest % meth differences or in larger windows.
+The heatmap can be useful for further visualising the variation amongst samples. In this case we see that while the DMRs distinguish FF from MM samples, there is one FF sample that is relatively more similar to the MM samples.
 ```
-# HEATMAP OF SOME DMRs
 library(pheatmap)
 # get the DMRs according to criteria and make an index based on the chromosome names and start pos.
-DMdata_DM<-subset(DMdata,result!="non_DM" & abs(meth.diff)> 25 & qvalue<0.01)
+DMdata_DM<-subset(DMdata,result!="non_DM" & abs(meth.diff)> 50 & qvalue<0.01)
 DMdata_DM$index<-paste(DMdata_DM$chr,DMdata_DM$start,sep="_")
 
 # get data frame of percentage meth per sample (derived from percMethylation(meth) earlier)
+pm<-percMethylation(meth)
 meth2<-as.data.frame(pm)
 # add an index from the object 'DMdata' (derived from getData(Diff_pops) earlier)
 # --> the rows should be in the same order in DMdata as they are in the & meth dataframe
@@ -192,7 +195,8 @@ meth3<-subset(meth2,index %in% DMdata_DM$index)[-10] # last part removes the ind
 # convert to matrix
 meth3mat<-as.matrix(meth3)
 
-pheatmap(meth3mat,clustering_method = "complete", show_rownames=F)
+# make the heatmap
+pheatmap(meth3mat,clustering_method = "complete", show_rownames=T)
 ```
 
 ### Intersecting with gene structure annotation
@@ -202,11 +206,11 @@ library("genomation")
 ```
 We have a BED12 file with exon annotations for each transcript:
 ```
-head(read.table("stickleback_v5_ensembl_genes.bed"))
+head(read.table("Gasterosteus_aculeatus.GAculeatus_UGA_version5.115.agat_edit.bed"))
 ```
 readTranscriptFeatures() reads in the BED12 file and converts it to a GRangesList object
 ```
-gene.obj=readTranscriptFeatures("stickleback_v5_ensembl_genes.bed")
+gene.obj=readTranscriptFeatures("Gasterosteus_aculeatus.GAculeatus_UGA_version5.115.agat_edit.bed")
 gene.obj
 ```
 Intersect the DMRs with the annotation. There may be some warnings about chromosomes not present in either DMR set or annotation
@@ -239,9 +243,9 @@ nrow(DM_promoters) # putative promoters of 240 transcripts overlap DMRs
 Now we have a list of transcripts that are interesting to us because of DMRs overlapping the promoters. We can fetch more information, e.g. gene names and descriptions, from the ENSEMBL database...
 ```
 library(biomaRt)
-ensembl <- useEnsembl(biomart = "genes", dataset = "gaculeatus_gene_ensembl",host="https://sep2019.archive.ensembl.org")
+ensembl <- useEnsembl(biomart = "genes", dataset = "gaculeatus_gene_ensembl")
 ```
-The annotations of the genome version used for this analysis are from release 95. Here we therefore use a 'legacy' version of the ENSEMBL database, release 99. Ideally, you will always be working with the most up to date annotation.
+The annotations of the genome version used for this analysis are from release 115, the most recent at the time of writing. Ideally, you will always be working with the most up to date annotation.
 ```
 listAttributes(ensembl) # list possible attributes
 
@@ -253,7 +257,6 @@ query<-getBM(attributes = c('ensembl_transcript_id','ensembl_gene_id','external_
 
 head(query)
 ```
-Note that there are 4 transcript entries missing. I suspect a small number were deprecated between ENSEMBL versions 95 and 99.
 
 ## Exercises:
 * Perform the DMR analysis for the environmental comparison (MM vs MF)
@@ -261,7 +264,6 @@ Note that there are 4 transcript entries missing. I suspect a small number were 
 * What is the relative distribution of hyper- and hypomethylated regions?
 * Is there a difference in the distribution of covered features (exons, promoters etc.) between hypo- and hyper-DMRs?
 * Do these two classes of DMRs appear to be related to different functions?
-* How do parameters such as site coverage and number of CpGs in the windows influence DMR detection?
 
 ### OPTIONAL: GO term enrichment analysis
 
@@ -296,7 +298,9 @@ enricher(gene = DM_promoters$feature.name,TERM2GENE = term2gene, TERM2NAME = ter
 # Is anything enriched amongst promoters that are differentially methylated in both experimental and population comparisons?
 ```
 Appendix: Obtaining BED12 file of stickleback transcripts
-The stickleback V5 gff3 annotation was obtained (https://stickleback.genetics.uga.edu/downloadData/) and converted it to BED12 format (for use with genomation) with the AGAT toolkit:
+The stickleback V5 gff3 annotation was obtained (https://ftp.ensembl.org/pub/release-115/gff3/gasterosteus_aculeatus/) and converted it to BED12 format (for use with genomation) with the AGAT toolkit:
 ```
-agat_convert_sp_gff2bed.pl -gff stickleback_v5_ensembl_genes.gff3 -o stickleback_v5_ensembl_genes.bed
+wget https://ftp.ensembl.org/pub/release-115/gff3/gasterosteus_aculeatus/Gasterosteus_aculeatus.GAculeatus_UGA_version5.115.gff3.gz
+agat_convert_sp_gff2bed.pl -gff Gasterosteus_aculeatus.GAculeatus_UGA_version5.115.gff3.gz -o Gasterosteus_aculeatus.GAculeatus_UGA_version5.115.agat.bed
+sed -e 's/transcript://g' Gasterosteus_aculeatus.GAculeatus_UGA_version5.115.agat.bed > Gasterosteus_aculeatus.GAculeatus_UGA_version5.115.agat_edit.bed
 ```
