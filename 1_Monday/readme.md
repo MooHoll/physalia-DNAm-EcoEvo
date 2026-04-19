@@ -153,7 +153,7 @@ deduplicate_bismark --bam --outfile Col0_align_TAIR10 Col0_align_TAIR10.Col0_sub
 
 ### Advanced Tasks:
 * Copy an alternative genome assembly of one of the non-reference accessions and repeat indexing and alignment. Does the choice of genome affect mapping efficiency?
-* Bismark's default behaviour is to try to align reads in end-to-end mode. Try to repeat the alignment step using `--local` mode. How does thia affect mapping efficiency?
+* Bismark's default behaviour is to try to align reads in end-to-end mode. Try to repeat the alignment step using `--local` mode. How does this affect mapping efficiency?
 
 Further reading:
 https://pmc.ncbi.nlm.nih.gov/articles/PMC4009243/
