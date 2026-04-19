@@ -87,7 +87,7 @@ fastp --thread 2 --in1 Col0_subsample.fastq.gz --out1 Col0_subsample.trimmed.fas
     --cut_front --cut_front_window_size 1 --cut_front_mean_quality 20 \
     --cut_tail --cut_tail_window_size 1 --cut_tail_mean_quality 20
 ```
-Above takes a single end file (Col0_subsample.fastq.gz) and outputs a trimmed version. Here, bases are cut from the front (5') and tail (3') end of the read if the phred33 quality score is below 20, which translates to trimming the base if there is more than a 1% change of an incorrect base call. See more about phred33 scores here:
+Above takes a single end file (Col0_subsample.fastq.gz) and outputs a trimmed version. Here, bases are cut from the front (5') and tail (3') end of the read if the phred33 quality score is below 20, which translates to trimming the base if there is more than a 1% chance of an incorrect base call. See more about phred33 scores here:
 https://en.wikipedia.org/wiki/Phred_quality_score
 
 You can adjust the quality parameters as you see fit. For the paired end version, see `fastp_PE.sh` in this repository.
