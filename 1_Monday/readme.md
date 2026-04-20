@@ -144,6 +144,7 @@ Finally, let's perform deduplication. This removes reads originating from possib
 deduplicate_bismark --bam --outfile Col0_align_TAIR10 Col0_align_TAIR10.Col0_subsample.trimmed_bismark_bt2.bam
 # add --paired if data were paired-end
 ```
+NOTE: Skip the deduplication step if you are working with Reduced Representation Bisulfite Sequencing (RRBS) data. Fragments resulting from restriction enzyme digestion may be indistinguishable from PCR duplicates, and thus many valid alignments may be lost.
 
 ### Core Tasks:
 * Examine the `Bismark` documentation: [https://felixkrueger.github.io/Bismark/](https://felixkrueger.github.io/Bismark/)
