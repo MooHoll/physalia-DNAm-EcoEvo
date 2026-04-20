@@ -116,7 +116,7 @@ Here, we ask Bismark to generate and index a bisulfite-converted genome for use 
 # make a directory for the genome: this is the directory we will supply to Bismark
 mkdir bisulfite_genome_TAIR10
 # copy the genome assembly into the new directory
-cp ~/Share/1_Monday/TAIR10_genome/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa bisulfite_genome_TAIR10
+cp ~/Share/1_Monday/genome_TAIR10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa bisulfite_genome_TAIR10
 # run bismark_genome_preparation
 bismark_genome_preparation bisulfite_genome_TAIR10
 ```
