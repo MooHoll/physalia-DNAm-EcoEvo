@@ -10,8 +10,9 @@
 # should work on either compressed or uncompressed inputs
 # this could be repeated for multiple VCFs, e.g. from multiple SNP callers
 
-# NOTE: I have not tested this on g.vcf files from GATK HaplotypeCaller
-# It should work as long as they are filtered only for SNP positions, i.e. remove the monomorphic haplotype blocks first
+# NOTE: this will not work directly on a g.vcf file from GATK HaplotypeCaller because of the monomorphic blocks
+# You have to remove the monomorphic blocks first like so:
+# zcat Dog-4.g.vcf.gz | awk '$5!="<NON_REF>"' > Dog-4.snp.g.vcf
 
 # e.g.:
 # sh filter_SNPs_from_covfile2.sh Dog4.CpG_report.merged_CpG_evidence.cov.gz CtoT_GtoA_SNPs_4samples_zerobased.bed Dog4.CpG_report.merged_CpG_evidence.SNPfilt.cov
