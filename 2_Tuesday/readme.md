@@ -69,7 +69,7 @@ We can run one more command which merges the calls across strands. As CpGs consi
 * Carry out the strand merge
 
 ```
-coverage2cytosine -o <file_name> --merge_CpGs --genome_folder TAIR10_genome/ <your_deduplicated>.bam
+coverage2cytosine -o <file_name> --merge_CpGs --genome_folder TAIR10_genome/ <your_file>.cov.gz
 
 bismark2report ./
 ```
