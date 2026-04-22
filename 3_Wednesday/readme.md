@@ -11,7 +11,7 @@ This is the Readme file for the session on Wednesday, where we will cover the ON
 
 ## Overview
 
-We will cover from pod5 modification basecalling to basic visualization of the data, aiming to obtain phased haplotypes in the mealybug Planococcus citri. 
+We will cover from pod5 modification basecalling to basic visualization of the data, aiming to obtain phased haplotypes in the sea anemone *Nematostella vectensis*. 
 
 ## Dorado base modification basecalling
 
