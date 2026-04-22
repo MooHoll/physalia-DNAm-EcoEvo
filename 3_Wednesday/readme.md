@@ -51,7 +51,7 @@ Besides the GPUs, if you have enough CPUs, you can always take advantage of that
 This bam file contains your reads aligned to the reference genome, with the special flags **MM** and **ML** with the methylation probabilites / values. Let's copy You can have a look at your reads using:
 
 ```
-ln -s /home/ubuntu/Share/3_Wednesday/rawdata/F4_sorted.bam
+ln -s /home/ubuntu/Share/3_Wednesday/rawdata/Locus_sorted.bam
 samtools index Locus_sorted.bam
 samtools view Locus_sorted.bam | head
 ```
