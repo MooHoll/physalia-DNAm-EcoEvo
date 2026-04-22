@@ -17,13 +17,10 @@ library(dplyr)
 library(ggplot2)
 library(biomaRt)
 library(genomation)
-library(GenomicRanges)
 ```
 And optionally:
 ```
 library(clusterProfiler) # for GO term enrichment, if desired
-library(DSS) # for alternative DMC/DMR calling with DSS
-require(bsseq)
 ```
 ## Overview
 
@@ -31,13 +28,13 @@ In this workshop we will quantify DNAme and calculate differential DNA methylati
 
 We will start with methylation counts files (.cov.gz) output from bismark_methylation_extractor after aligning RRBS reads to the stickleback V5 genome assembly obtained from the ENSEMBL database ([https://stickleback.genetics.uga.edu/downloadData/](https://www.ensembl.org/Gasterosteus_aculeatus/Info/Index)). All sites are reference CpG context. Sites were not SNP-filtered. We will analyse these files using the R package methylKit, a popular package for differential methylation analyses.
 
-An additional script is provided to process the same data using a different package, DSS.
+An additional script is provided to process the same data using a different package, DSS, although methylKit has the option to implement the same statistical model for DMC / DMR calling as used by DSS (Bayesian beta binomial model).
 
 ## Workflow
 
 ### Reading in files / initial processing
-Download the folder 'cov_files' from the server into your working directory, either using a file transfer client like filezilla or using the sftp command on a local terminal.
-Once they are accessible on your local computer, we can read them into R with methylKit's methRead() function. Note here that we specify that the counts files derived from bismark, and that we set a minimum coverage of 3 at each site.
+Download the folder 'cov_files' from the googlr drive into your working directory. Once they are accessible on your local computer, we can read them into R with methylKit's methRead() function. Note here that we specify that the counts files derived from bismark, and that we set a minimum coverage of 5 at each site (which is set here mostly to prune the data for performance purposes).
+As for the sample IDs, the first three samples are 'MM' (marine fish in salt water), the next three are 'MF' (marine fish in freshwater) and the last three are 'FF' (freshwater fish in freshwater). By default, the samples are entered in alphabetical order of filename, and we specify the sample IDs and corresponding treatment codes in the order in which the files are read in.
 ```
 #set path to methylation files
 meth_path<-"cov_files/"
@@ -52,43 +49,68 @@ myobj<-methRead(file.list,
                 assembly="stickleback_v5",
                 treatment=c(0,0,0,1,1,1,2,2,2),
                 context="CpG",
-                mincov = 3,
+                mincov = 5, # this can reasonably be set lower for DMR analyses; set at 5 here mainly for performance purposes
                 pipeline = "bismarkCoverage"
 )
 ```
-methylKit allows the identification either of individual differentially methylated cytosines (DMCs) Or differentially methylated regions (DMRs); the pipeline is almost identical, the difference being that we summarise the counts into windows for DMRs. Additional filtering may be desired for site-level analysis, e.g.:
+OPTIONAL: If you want to reduce the computation time for testing purposes, you can subset the data for just a few chromosomes. This speeds things up especially at the tileMethylCounts() step.
+```
+my_chroms <- c("I", "II", "III", "IV")
+subset_list <- lapply(myobj, function(x) x[x$chr %in% my_chroms,])
+subset_list <- as(subset_list, "methylRawList")
+subset_list@treatment<-c(0,0,0,1,1,1,2,2,2) # we need to add the treatment variable back in here
+myobj<-subset_list
+```
+
+methylKit allows the identification either of individual differentially methylated cytosines (DMCs) Or differentially methylated regions (DMRs); the pipeline is almost identical, the difference being that we summarise the counts into windows for DMRs. This means that for DMRs, it is not strictly necessary to set a minimum coverage threshold because counts at low coverage sites will be added to a total count within the window. However it is a good idea to filter out sites with very high coverage (99.9th percentile) as such abnormally high coverage is often the result of repetitive elements. The filterByCoverage() allows us to apply this filter:
 ```
 # Filtering options for DMC identification
-filtered.myobj=filterByCoverage(myobj,lo.count=5,lo.perc=NULL,
+filtered.myobj=filterByCoverage(myobj,lo.count=NULL,lo.perc=NULL,
                                  hi.count=NULL,hi.perc=99.9)
 ```
 tileMethylCounts() summarises the counts into windows
+NOTE: If you are using mac or linux, you can increase 'mc.cores' to a slightly higher number (e.g. 6) to speed things up, depending on how many cores are available on your system.
 ```
-tiles<-tileMethylCounts(myobj,win.size=1000,step.size=1000,cov.bases = 4)
+tiles<-tileMethylCounts(filtered.myobj,win.size=1000,step.size=1000,cov.bases = 10, mc.cores=1)
 ```
-Some initial plotting of methylation distributions of individual samples:
+ALSO NOTE: if you have pre-defined regions of interest (e.g. promoters, CpG islands), you may consider the regionCounts() method which will obtain total counts of methylated and unmethylated cytosines within each pre-defined feature of interest (see methylKit manual for this).
+
+Some initial plotting of methylation and coverage distributions of individual samples:
 ```
 # plot distributions of one sample
-getMethylationStats(tiles[[2]],plot=TRUE,both.strands=FALSE)
+par(mfrow=c(2,2))
+# for individual sites:
+getMethylationStats(filtered.myobj[[1]],plot=TRUE,both.strands=FALSE)
+getCoverageStats(filtered.myobj[[1]],plot=TRUE,both.strands=FALSE)
+# and for the tiling windows:
+getMethylationStats(tiles[[1]],plot=TRUE,both.strands=FALSE)
+getCoverageStats(tiles[[1]],plot=TRUE,both.strands=FALSE)
 
-# plot distributions of all samples
+# plot distributions of all samples (for tiling windows only):
 par(mfrow=c(3,3))
 for (i in seq(1,9)){
   getMethylationStats(tiles[[i]],plot=TRUE,both.strands=FALSE)}
+par(mfrow=c(3,3))
+for (i in seq(1,9)){
+  getCoverageStats(tiles[[i]],plot=TRUE,both.strands=FALSE)}
 
 ```
 unite() will drop windows that are not covered in all samples
 ```
 # merge samples
 meth<-unite(tiles)
+# then, optionally - nullify objects we no longer need, to save memoty
+myobj<-NULL; filtered.myobj<-NULL; tiles<-NULL
 ```
 sometimes we may want to remove chromosomes (e.g. sex chromosomes, organelles)
 ```
 # see which chromosomes are represented
 levels(as.factor(meth$chr))
-# We will leave in the Y chromosome and as all the individuals are reportedly male, but if we wanted to:
-# meth<-meth[meth$chr!="Y", ]
+# We will leave in the Y chromosome and as all the individuals are reportedly male, but if we wanted to
+#meth<-meth[meth$chr!="Y", ]
+# chromosome XIX also harbours a major sex determining region, which some people prefer to exclude.
 # We may however want to remove unplaced contigs: these often contain highly repetitive sequences where many reads may not have properly mapped.
+`%not_like%`<-purrr::negate(`%like%`)
 meth<-meth[meth$chr%not_like%"JACDQR", ]
 ```
 ### Overview of methylation levels and variance
@@ -121,6 +143,8 @@ PCA is a common way of inspecting the extent of variation within and between gro
 par(mfrow=c(1,1))
 PCASamples(meth)
 ```
+What do you notice about the spread of the samples across the two principal components? Are there any interesting overall patterns? Do the groups seem to have equal variance?
+
 In case you want to plot the data yourself, e.g. with ggplot:
 ```
 PCA.obj<-PCASamples(meth,obj.return = T)
@@ -129,7 +153,7 @@ PCA.obj$x
 # get the % variance explained for the first two PCs
 PCA.obj$sdev[c(1,2)]/sum(PCA.obj$sdev)
 ```
-### Differential methylation
+### Calculating differential methylation
 methylKit differential methylation analyses are limited to two-group comparisons, although covariates can be included (see the methylKit vignette). For models with multiple groups or factorial designs, check out DSS and / or edgeR.
 
 Let's perform a differential methylation comparison between marine and freshwater fish. We first need to create a new methylKit object with only these six samples.
@@ -137,12 +161,15 @@ Let's perform a differential methylation comparison between marine and freshwate
 meth_pops <- reorganize(meth,sample.ids=c("MM1","MM3","MM4","FF2","FF3","FF4"),
                            treatment=c(0,0,0,1,1,1))
 ```
-Next, calculateDiffMeth() will actually perform the logistic-regression based calculations of differential methylation. This will produce the methylation difference and q-value (equivalent to an adjusted p-value) for each region (or site, if performing site-level analysis):
+Note that here we specify the M group as control (0) and the freshwater group  as 'test' (1), so hypermethylation will correspond with increased methylation in the freshwater population and hypomethylation will correspond with drecreased methylation in freshwater.
+How would you run the above command for the other comparison (MM vs MF)?
+
+The default workflow employs the calculateDiffMeth() command to perform the differential methylation calculations using the logistic regression method. However, in this case we will use the Bayesian beta binomial method (originally implemented in the DSS package, and implemented in methylKit as the calculateDiffMethDSS() command), as it is able to handle unequal variance between groups. This will produce the methylation difference and q-value (adjusted p-value) for each region (or site, if performing site-level analysis). 
 ```
-Diff_pops<-calculateDiffMeth(meth_pops)
+Diff_pops<-calculateDiffMethDSS(meth_pops)
 head(Diff_pops)
 
-# A plot to visualise the % of windows on each chromosome that are differentially methylated
+# We can then immediately make a plot to visualise the % of windows on each chromosome that are differentially methylated
 diffMethPerChr(Diff_pops,plot=T,qvalue.cutoff=0.05, meth.cutoff=25)
 # or just the numbers...
 diffMethPerChr(Diff_pops,plot=F,qvalue.cutoff=0.05, meth.cutoff=25)
@@ -152,10 +179,15 @@ Diff_pops is now a methylKit object that contains information pertaining to diff
 # e.g., get all DMRs with criteria of 25% difference in methylation level at q < 0.01
 Diff_pops_25p<-getMethylDiff(Diff_pops,difference=25,qvalue=0.05)
 Diff_pops_25p
+# If you wish, you can also select for either hyper or hypomethylated regions:
 # get only hypermethylated (increased methylation in freshwater):
 Diff_pops_25p.hyper<-getMethylDiff(Diff_pops,difference=25,qvalue=0.05,type="hyper")
+Diff_pops_25p.hyper
+# get only hypomethylated (decreased methylation in freshwater):
+Diff_pops_25p.hypo<-getMethylDiff(Diff_pops,difference=25,qvalue=0.05,type="hypo")
+Diff_pops_25p.hypo
 ```
-Alternatively, you can extract the results as a dataframe to explore more flexibily...
+You can also extract the results as a dataframe to work with more flexibly...
 ```
 DMdata<-getData(Diff_pops)
 head(DMdata)
@@ -166,7 +198,21 @@ DMdata$result<-ifelse(DMdata$meth.diff>25&DMdata$qvalue<0.05,"hyper",
 nrow(subset(DMdata,result=="hypo"))
 nrow(subset(DMdata,result=="hyper"))
 nrow(subset(DMdata,result=="non_DM"))
+```
+For example, this allows us to write out BED files: we can use these to see where are the DMRs on a genome browser (e.g. IGV).
+```
+write.table(data.frame(chr=subset(DMdata,result!="non_DM")$chr,
+                       start=subset(DMdata,result!="non_DM")$start-1,
+                       end=subset(DMdata,result!="non_DM")$end-1,
+                       result=subset(DMdata,result!="non_DM")$result),
+            file="DMRs.bed",row.names = F,col.names = F,quote = F,sep="\t")
 
+# note that we subtract 1 from start end coordinates, so that they become '0-based' coordinates (as per BED format)
+```
+
+### Plotting differential methylation
+
+```
 # make a plot of meth. differences on chromosome 1
 ggplot(subset(DMdata,chr=="I"),aes(x=start,y=meth.diff))+
          geom_point(aes(fill=result),pch=21,alpha=0.5)+
