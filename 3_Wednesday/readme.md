@@ -75,7 +75,7 @@ But what we really want is **pileup**.
 As with any softare, good to see options by doing: 
 `/home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.6.1_481e3c9/modkit pileup`
 
-For our test dataset we want to call methylation only on CpGs, this is an insect. Also, dorado used a CG model, so other contexts wouldn't work. 
+For our test dataset we want to call methylation only on CpGs, this is an invertebrate. Also, dorado used a CG model, so other contexts wouldn't work. 
 
 ```
 /home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.6.1_481e3c9/modkit pileup \
@@ -88,7 +88,7 @@ For our test dataset we want to call methylation only on CpGs, this is an insect
 /home/ubuntu/Share/3_Wednesday/rawdata/Locus_sorted.bam \
 Locus_modkit.bedMethyl
 ```
-This settings only focus on CpGs and combine information from Watson and Crick strand in a single value, all that makes it easier/compact, but depending on analysis, you might want it. Also ignores "h", which is the hydroxmethylation calling. Probably not a great idea for this organism. 
+This settings only focus on CpGs and combine information from Watson and Crick strand in a single value, all that makes it easier/compact, but depending on analysis, you might want it. Also ignores "h", which is the hydroxmethylation calling. Probably not a great idea for this organism to look for hmC. 
 
 If you had a plant genome or something with non-CG methylation, you could play with **--motif CHH 0** or **--motif CHG 0** (you would need to use a 5mC_5hmC model in dorado). 
 
