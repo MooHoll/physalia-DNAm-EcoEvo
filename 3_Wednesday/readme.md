@@ -81,10 +81,10 @@ For our test dataset we want to call methylation only on CpGs, this is an invert
 /home/ubuntu/Share/3_Wednesday/software/dist_modkit_v0.6.1_481e3c9/modkit pileup \
 --ref /home/ubuntu/Share/3_Wednesday/rawdata/GCF_932526225.1_jaNemVect1.1_genomic.fna \
 --threads 2 \
+--modified-bases 5mC \
 --cpg \
 --prefix mCG \
 --combine-strands \
---modified-bases 5mC \
 /home/ubuntu/Share/3_Wednesday/rawdata/Locus_sorted.bam \
 Locus_modkit.bedMethyl
 ```
