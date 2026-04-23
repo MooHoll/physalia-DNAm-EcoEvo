@@ -339,7 +339,7 @@ ensembl <- useEnsembl(biomart = "genes", dataset = "gaculeatus_gene_ensembl")
 listAttributes(ensembl) # list possible attributes
 # Query the database via BiomaRt to extract information
 query<-getBM(attributes = c('ensembl_transcript_id','ensembl_gene_id','external_gene_name', 'description'),
-             values = DM_promoter_overlap$feature.name, 
+             values = DM_promoters, 
              filters='ensembl_transcript_id',
              mart = ensembl)
 
