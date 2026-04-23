@@ -415,6 +415,9 @@ manhplot <- ggplot(subset(DMdata,result=="non_DM"), aes(
     axis.text.x = element_text(angle = 60, size = 8, vjust = 0.5))+
   geom_point(data=subset(DMdata,result=="hyper"),pch=21,mapping=aes(x = bp_cumul, y = meth.diff),fill="red")+
   geom_point(data=subset(DMdata,result=="hypo"),pch=21,mapping=aes(x = bp_cumul, y = meth.diff),fill="blue")
+
+# view plot
+manhplot
 ```
 
 ### OPTIONAL: GO term enrichment analysis
