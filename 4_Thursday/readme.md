@@ -41,7 +41,7 @@ If you check the top of just one of these files, e.g.
 ```
 head(read.table(gzfile("cov_files/SRR3632630.CpG_report.merged_CpG_evidence.cov.gz")))
 ```
-...you'll recognise the format of the cov files produced on Day 2 for the Arabidopsis data, with columns for chromosome, start, end, % methylation, number of Cs and number of Ts.
+...you'll recognise the format of the cov files produced on Day 2 for the Arabidopsis data, with columns for chromosome, start, end, % methylation, number of methylated Cs and number of unmethylated Cs.
 ```
   V1   V2   V3       V4 V5 V6
 1  I 2564 2565 95.23810 40  2
@@ -366,6 +366,9 @@ write.table(DM_promoter_overlap,file="DMRs_promoter_overlap.txt",sep="\t",col.na
 * What is the relative distribution of hyper- and hypomethylated regions?
 * Is there a difference in the distribution of covered features (exons, promoters etc.) between hypo- and hyper-DMRs?
 * Do these two classes of DMRs appear to be related to different functions?
+## Questions to ponder:
+* What kind of confounding factors could influence the methylation patterns?
+* Could the study design be improved?
 
 ### BONUS CODE: Manhattan-like plot of differential methylation
 
