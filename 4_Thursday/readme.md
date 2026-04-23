@@ -11,21 +11,19 @@ https://drive.google.com/drive/folders/1YILPV5wAoAwAh4kkBHpVl0QkDSEPOsJ5
 
 The R packages we need are:
 ```
-library(methylKit)
+library(methylKit) # install via BiocManager::install()
 library(matrixStats)
 library(ggplot2)
-library(biomaRt)
-library(genomation)
+library(biomaRt) # install via BiocManager::install()
+library(genomation) # install via BiocManager::install()
 ```
 And optionally:
 ```
 library(pheatmap) for heatmap
 library(dplyr) # for manhattan-like plot
 #NOTE: be careful using the dplyr package alongside methylKit as both have functions called 'select()'
-library(clusterProfiler) # for GO term enrichment, if desired
+library(clusterProfiler) # for GO term enrichment, if desired; install via BiocManager::install()
 ```
-Some of these packages may need to be installed via the BiocManager package with the command 'BiocManager::install("<package_name>")'
-
 ## Overview
 
 In this workshop we will quantify DNAme and calculate differential DNA methylation from RRBS data from threespine stickleback (G. aculeatus). The RRBS derived from gill tissue derived from either marine or freshwater / lake populations. The data were originally published by Artemov et al (2017) (https://academic.oup.com/mbe/article/34/9/2203/3813257). Sticklebacks are an interesting system to study adaptive evolution and plasticity, as they have repeatedly colonised freshwater habitats from ancestral marine environments, resulting in distinct marine and lake morphs, the latter being adapted to lower salinity. Whether epigenetic variation plays a role in this adaptation has been a question of gret interest. We will use a subset of the data to facilitate two comparisons: (1) a 'population' comparison between marine vs freshwater fish each kept at their native salinities (marine fish kept in seawater vs freshwater fish kept in lake water), and (2) an experimental comparison between marine fish in native salinity vs marine fish kept in lake water.
