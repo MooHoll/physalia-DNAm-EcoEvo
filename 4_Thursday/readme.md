@@ -16,6 +16,7 @@ library(matrixStats)
 library(ggplot2)
 library(biomaRt) # install via BiocManager::install()
 library(genomation) # install via BiocManager::install()
+library(data.table)
 ```
 And optionally:
 ```
