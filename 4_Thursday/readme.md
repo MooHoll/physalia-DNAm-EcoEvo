@@ -7,7 +7,7 @@
 
 This is the Readme file for the session on Thursday, where we will cover differential DNA methylation analysis in `R`. All the data you'll need for this will be stored in: 
 
-[https://drive.google.com/drive/folders/1cGRQGoylbbWUzECj_ATLJIyHoBPCwNOn?usp=sharing](https://drive.google.com/drive/folders/1YILPV5wAoAwAh4kkBHpVl0QkDSEPOsJ5?usp=sharing)
+https://drive.google.com/drive/folders/1YILPV5wAoAwAh4kkBHpVl0QkDSEPOsJ5
 
 The R packages we need are:
 ```
