@@ -142,9 +142,9 @@ head(pm)
 # get the mean methylation leves of all sites or windows
 methmeans<-rowMeans(pm)
 
-# what about a specific group? Here the 'FF' samples are in columns 7,8, and 9 of the matrix
-methmeans_MM<-rowMeans(pm[,c(7,8,9)])
-methSDs_MM<-rowSds(pm[,c(7,8,9)])
+# what about a specific group? Here the 'MM' samples are in columns 1,2, and 3 of the matrix
+methmeans_MM<-rowMeans(pm[,c(1,2,3)])
+methSDs_MM<-rowSds(pm[,c(1,2,3)])
 # plot the mean and SD
 par(mfrow=c(2,1))
 hist(methmeans_MM)
