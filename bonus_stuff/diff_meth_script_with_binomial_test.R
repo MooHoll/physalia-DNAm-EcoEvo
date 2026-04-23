@@ -1,7 +1,6 @@
 ## -------------------------------------------------------------------------
-## Pesticide vs Pristine
+## A vs B
 ## -------------------------------------------------------------------------
-setwd("~/PROJECTS/Daphnia_ETT_ER/1_Epigenetics_Through_Time/2023_analyses/WGBS/2_merged_cpgs")
 library(grid)
 library(readr)
 library(ggplot2)
@@ -83,7 +82,8 @@ df_meth_all <- df_meth_all[,-c(1:4)]
 all_data <- lapply(seq(1, ncol(df_meth_all), by=3), function(i) 
   df_meth_all[i: pmin((i+1), ncol(df_meth_all))])
 
-# Define binomial test
+# Define binomial test, the 0.005 value is equivelent to the 0.5% conversion error rate
+# If your conversion rate is 0.3% for example, change both below values to 0.003                  
 bt <- function(a, b, p = 0.005) {binom.test(a, b, 0.005, alternative="greater")$p.value}
 
 # Set up output dataframe
