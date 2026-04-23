@@ -383,16 +383,16 @@ data_cumul <- DMdata |>
   select(chr, bp_add)
 DMdata <- DMdata |>
   inner_join(data_cumul, by = "chr") |>
-  mutate(bp_cum = start + bp_add)
+  mutate(bp_cumul = start + bp_add)
 
 # set the points for the x axis (chromosome centres)
 axis_set <- DMdata |>
   group_by(chr) |>
-  summarize(center = mean(bp_cum))
+  summarize(center = mean(bp_cumul))
 
 # code the plot
 manhplot <- ggplot(subset(DMdata,result=="non_DM"), aes(
-  x = bp_cum, y = meth.diff,
+  x = bp_cumul, y = meth.diff,
   color = as.factor(chr))) +
   geom_hline(
     yintercept = c(-25,25), color = "grey40",
@@ -410,8 +410,8 @@ manhplot <- ggplot(subset(DMdata,result=="non_DM"), aes(
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     axis.text.x = element_text(angle = 60, size = 8, vjust = 0.5))+
-  geom_point(data=subset(DMdata,result=="hyper"),pch=21,mapping=aes(x = bp_cum, y = meth.diff),fill="red")+
-  geom_point(data=subset(DMdata,result=="hypo"),pch=21,mapping=aes(x = bp_cum, y = meth.diff),fill="blue")
+  geom_point(data=subset(DMdata,result=="hyper"),pch=21,mapping=aes(x = bp_cumul, y = meth.diff),fill="red")+
+  geom_point(data=subset(DMdata,result=="hypo"),pch=21,mapping=aes(x = bp_cumul, y = meth.diff),fill="blue")
 ```
 
 ### OPTIONAL: GO term enrichment analysis
