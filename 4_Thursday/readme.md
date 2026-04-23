@@ -384,7 +384,7 @@ data_cumul <- DMdata |>
   group_by(chr) |>
   summarise(max_bp = max(start)) |>
   mutate(bp_add = lag(cumsum(max_bp), default = 0)) |>
-  select(chr, bp_add)
+  dplyr::select(chr, bp_add)
 DMdata <- DMdata |>
   inner_join(data_cumul, by = "chr") |>
   mutate(bp_cumul = start + bp_add)
