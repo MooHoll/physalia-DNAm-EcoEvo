@@ -35,7 +35,23 @@ An additional script is provided to process the same data using a different pack
 ## Workflow
 
 ### Reading in files / initial processing
-Download the folder 'cov_files' from the googlr drive into your working directory. Once they are accessible on your local computer, we can read them into R with methylKit's methRead() function. Note here that we specify that the counts files derived from bismark, and that we set a minimum coverage of 5 at each site (which is set here mostly to prune the data for performance purposes).
+Download the folder 'cov_files' from the google drive into your working directory.
+
+If you check the top of just one of these files, e.g.
+```
+head(read.table(gzfile("cov_files/SRR3632630.CpG_report.merged_CpG_evidence.cov.gz")))
+```
+...you'll recognise the format of the cov files produced on Day 2 for the Arabidopsis data, with columns for chromosome, start, end, % methylation, number of Cs and number of Ts.
+```
+  V1   V2   V3       V4 V5 V6
+1  I 2564 2565 95.23810 40  2
+2  I 2691 2692 76.92308 10  3
+3  I 2719 2720 92.30769 12  1
+4  I 2725 2726 84.61539 11  2
+5  I 2728 2729 92.30769 12  1
+6  I 2733 2734 84.61539 11  2
+```
+We can read all of the cov files into R with methylKit's methRead() function. Note here that we specify that the counts files derived from bismark, and that we set a minimum coverage of 5 at each site (which is set here mostly to prune the data for performance purposes).
 As for the sample IDs, the first three samples are 'MM' (marine fish in salt water), the next three are 'MF' (marine fish in freshwater) and the last three are 'FF' (freshwater fish in freshwater). By default, the samples are entered in alphabetical order of filename, and we specify the sample IDs and corresponding treatment codes in the order in which the files are read in.
 ```
 #set path to methylation files
@@ -171,13 +187,14 @@ The default workflow employs the calculateDiffMeth() command to perform the diff
 ```
 Diff_pops<-calculateDiffMethDSS(meth_pops)
 head(Diff_pops)
-
-# We can then immediately make a plot to visualise the % of windows on each chromosome that are differentially methylated
+```
+Diff_pops is now a methylKit object that contains information pertaining to differential methylation. We can then immediately make a plot to visualise the % of windows on each chromosome that are differentially methylated:
+```
 diffMethPerChr(Diff_pops,plot=T,qvalue.cutoff=0.05, meth.cutoff=25)
 # or just the numbers...
 diffMethPerChr(Diff_pops,plot=F,qvalue.cutoff=0.05, meth.cutoff=25)
 ```
-Diff_pops is now a methylKit object that contains information pertaining to differential methylation. We can further use methylKit functions to narrow down on the DMRs themselves.
+We can further use methylKit functions to narrow down on the DMRs themselves.
 ```
 # e.g., get all DMRs with criteria of 25% difference in methylation level at q < 0.01
 Diff_pops_25p<-getMethylDiff(Diff_pops,difference=25,qvalue=0.05)
