@@ -13,13 +13,15 @@ The R packages we need are:
 ```
 library(methylKit)
 library(matrixStats)
-library(dplyr)
 library(ggplot2)
 library(biomaRt)
 library(genomation)
 ```
 And optionally:
 ```
+library(pheatmap) for heatmap
+library(dplyr) # for manhattan-like plot
+#NOTE: be careful using the dplyr package alongside methylKit as both have functions called 'select()'
 library(clusterProfiler) # for GO term enrichment, if desired
 ```
 ## Overview
@@ -68,8 +70,9 @@ methylKit allows the identification either of individual differentially methylat
 filtered.myobj=filterByCoverage(myobj,lo.count=NULL,lo.perc=NULL,
                                  hi.count=NULL,hi.perc=99.9)
 ```
-tileMethylCounts() summarises the counts into windows
-NOTE: If you are using mac or linux, you can increase 'mc.cores' to a slightly higher number (e.g. 6) to speed things up, depending on how many cores are available on your system.
+Next, tileMethylCounts() summarises the counts into windows - this is a key step for DMR analysis but would be omitted for DMC analysis.
+
+NOTE: It can take a while for methylKit to perform this step (up to 10 mins on my mac). You may wish to consider running this on a subset of the data first, to make sure it works (see subsetting step). If you are using mac or linux, you can increase 'mc.cores' to a slightly higher number (e.g. 6) to speed things up, depending on how many cores are available on your system.
 ```
 tiles<-tileMethylCounts(filtered.myobj,win.size=1000,step.size=1000,cov.bases = 10, mc.cores=1)
 ```
@@ -145,7 +148,7 @@ PCASamples(meth)
 ```
 What do you notice about the spread of the samples across the two principal components? Are there any interesting overall patterns? Do the groups seem to have equal variance?
 
-In case you want to plot the data yourself, e.g. with ggplot:
+In case you want to plot the data yourself, e.g. with ggplot, you can extract the eigenvector and eigenvalues:
 ```
 PCA.obj<-PCASamples(meth,obj.return = T)
 # get the PC values for each sample
@@ -182,10 +185,10 @@ Diff_pops_25p
 # If you wish, you can also select for either hyper or hypomethylated regions:
 # get only hypermethylated (increased methylation in freshwater):
 Diff_pops_25p.hyper<-getMethylDiff(Diff_pops,difference=25,qvalue=0.05,type="hyper")
-Diff_pops_25p.hyper
+Diff_pops_25p.hyper # how many do we have?
 # get only hypomethylated (decreased methylation in freshwater):
 Diff_pops_25p.hypo<-getMethylDiff(Diff_pops,difference=25,qvalue=0.05,type="hypo")
-Diff_pops_25p.hypo
+Diff_pops_25p.hypo # how many do we have?
 ```
 You can also extract the results as a dataframe to work with more flexibly...
 ```
@@ -194,7 +197,7 @@ head(DMdata)
 # classify DMRs according to your own criteria.
 DMdata$result<-ifelse(DMdata$meth.diff>25&DMdata$qvalue<0.05,"hyper",
                       ifelse(DMdata$meth.diff< -25&DMdata$qvalue<0.05,"hypo","non_DM"))
-# see numbers of regions
+# see numbers of regions in each category
 nrow(subset(DMdata,result=="hypo"))
 nrow(subset(DMdata,result=="hyper"))
 nrow(subset(DMdata,result=="non_DM"))
@@ -210,18 +213,24 @@ write.table(data.frame(chr=subset(DMdata,result!="non_DM")$chr,
 # note that we subtract 1 from start end coordinates, so that they become '0-based' coordinates (as per BED format)
 ```
 
-### Plotting differential methylation
+### More visualisation
+
+A nice way to visualise the overall landscape of DMRs is to plot the % meth. diff. of all the windows across a chromosome. Below make a plot for one chromosome, colouring the points according to whether they are hypermethylated, hypomethylated, or not differentially methylated.
 
 ```
 # make a plot of meth. differences on chromosome 1
 ggplot(subset(DMdata,chr=="I"),aes(x=start,y=meth.diff))+
          geom_point(aes(fill=result),pch=21,alpha=0.5)+
-  scale_fill_manual(values=c("red","blue","grey"))
+  scale_fill_manual(values=c("red","blue","grey"))+
+  geom_hline(yintercept=c(-25,25),linetype="dashed")
 ```
-A basic heatmap can also be made. This works best if you have a smaller number of DMRs (e.g. with the biggest % meth differences or in larger windows.
+Do you notice anything striking about the overall patterns on one chromosome?
+
+NOTE: We can also make something akin to a Manhattan plot, showing the DMR distributions across all chromosomes on the same panel. However the code is a bit long, so this is included as a 'bonus' at the end.
+
+A basic heatmap can also be made. This works better with a smaller number of DMRs (e.g. with the biggest % meth differences or in larger windows).
 The heatmap can be useful for further visualising the variation amongst samples. In this case we see that while the DMRs distinguish FF from MM samples, there is one FF sample that is relatively more similar to the MM samples.
 ```
-library(pheatmap)
 # get the DMRs according to criteria and make an index based on the chromosome names and start pos.
 DMdata_DM<-subset(DMdata,result!="non_DM" & abs(meth.diff)> 50 & qvalue<0.01)
 DMdata_DM$index<-paste(DMdata_DM$chr,DMdata_DM$start,sep="_")
@@ -247,9 +256,7 @@ pheatmap(meth3mat,clustering_method = "complete", show_rownames=T)
 
 ### Intersecting with gene structure annotation
 methylKit objects can be used with functions from the genomation package to incorporate gene structure annotation.
-```
-library("genomation")
-```
+
 We have a BED12 file with exon annotations for each transcript:
 ```
 head(read.table("Gasterosteus_aculeatus.GAculeatus_UGA_version5.115.agat_edit.bed"))
@@ -274,42 +281,121 @@ To find the specific genes that are associated with our DMRs, Genomation has a n
 TSSdists<-getAssociationWithTSS(Diff_pops_25p_Ann)
 head(TSSdists)
 ```
-For each DMR, we now have the distance to the nearest TSS, and the ID of that gene. Let's plot those distances:
+For each DMR, we now have the distance to the nearest TSS, and the ID of that transcript. Let's plot those distances:
 ```
-hist(getAssociationWithTSS(Diff_pops_25p_Ann)$dist.to.feature)
+hist(TSSdists$dist.to.feature)
 ```
-We may be particularly interested in the transcripts that are nearest to the DMRs. To narrow down on these transcripts, let's subset those with TSS within 1kb of the DMRs (i.e. overlapping with an arbitrarily defined promoter region).
+We expect a fairly tight distribution here as this is RRBS data, so the DMRs should be mostly in CG-rich regions and in the vicinity of genes.
+
+Note that the output from getAssociationWithTSS() does not contain the coordinates of the DMRs. To make something more intuitive, add the TSS information to our table of DMRs, so that for each DMR we will have its location in the genome, the distance to the nearest transcript TSS, and the ID of said transcript:
 ```
-DM_promoters<-subset(TSSdists,dist.to.feature > -1000 & dist.to.feature < 1000)
-head(DM_promoters)
-nrow(DM_promoters) # putative promoters of 240 transcripts overlap DMRs
+Diff_pops_25p$closest_feature<-TSSdists$feature.name
+Diff_pops_25p$closest_feature_TSSdist<-TSSdists$dist.to.feature
+Diff_pops_25p$closest_feature_strand<-TSSdists$feature.strand
+```
+
+We may be particularly interested in the transcripts that are nearest to the DMRs. To narrow down on these transcripts, let's subset those with TSS overlapping with possible promoter regions.
+
+Here I arbitrarily define the promoter region as being from 2000bp upstream to 500bp downstream of the TSS:
+
+```
+DM_promoter_overlap<-subset(getData(Diff_pops_25p),closest_feature_TSSdist > -2000 & closest_feature_TSSdist < 500)
+head(DM_promoter_overlap)
+nrow(DM_promoter_overlap) # how many DMRs overlap with arbitrarily defined promoters?
 ```
 
 ### Adding more information from the ENSEMBL database
-Now we have a list of transcripts that are interesting to us because of DMRs overlapping the promoters. We can fetch more information, e.g. gene names and descriptions, from the ENSEMBL database...
-```
-library(biomaRt)
-ensembl <- useEnsembl(biomart = "genes", dataset = "gaculeatus_gene_ensembl")
-```
-The annotations of the genome version used for this analysis are from release 115, the most recent at the time of writing. Ideally, you will always be working with the most up to date annotation.
-```
-listAttributes(ensembl) # list possible attributes
 
+Given that we have ENSEMBL IDs for the transcripts in close vicinity to DMRs, we can query the ENSEMBL database to get more information about the corresponding genes, e.g. gene names and descriptions if they exist. This can also be used to extract information about homology to other species, GO terms, and more.
+
+First get a nonredundant list of transcript IDs, as some 'promoters' may overlap with multiple DMRs, thus duplicate entries.
+```
+DM_promoters<-DM_promoter_overlap$closest_feature[!duplicated(DM_promoter_overlap$closest_feature)]
+library(biomaRt)
+```
+Now we are ready to query the database! Below, we submit the list of transcript IDs as the query to BiomaRt, tellinf it that we want to pull down the gene id, gene name, and description for each one.
+
+NOTE: the ENSEMBL servers may not always be responsive or operational. If you cannot connect, you can try a different mirror (see the help for useEnsembl() command), or just come back later and try again.
+
+```
+ensembl <- useEnsembl(biomart = "genes", dataset = "gaculeatus_gene_ensembl")
+listAttributes(ensembl) # list possible attributes
 # Query the database via BiomaRt to extract information
 query<-getBM(attributes = c('ensembl_transcript_id','ensembl_gene_id','external_gene_name', 'description'),
-             values = DM_promoters$feature.name, 
+             values = DM_promoter_overlap$feature.name, 
              filters='ensembl_transcript_id',
              mart = ensembl)
 
 head(query)
 ```
 
+Note also: The annotations of the genome version used for this analysis are from release 115, the most recent at the time of writing. Ideally, you will always be working with the most up to date annotation.
+
+Finally, let's merge the results from the query with our 'DM_promoter_overlap' dataframe. Then for each DMR overlapping putative promoters we will have the location, DMR statistics, closest TSS transcript and the name / description of the gene if available.
+
+```
+colnames(query)[1]<-"closest_feature"
+DM_promoter_overlap<-merge(DM_promoter_overlap,query,by="closest_feature")
+```
+
+We can also write this out as a table, e.g. for browsing in excel:
+```
+write.table(DM_promoter_overlap,file="DMRs_promoter_overlap.txt",sep="\t",col.names = T,row.names = F,quote=F)
+```
+
 ## Exercises:
 * Perform the DMR analysis for the environmental comparison (MM vs MF)
-* Are any promoter regions differentially methylated in both comparisons?
+* Do any transcripts have differentially methylated promoter regions in both comparisons?
 * What is the relative distribution of hyper- and hypomethylated regions?
 * Is there a difference in the distribution of covered features (exons, promoters etc.) between hypo- and hyper-DMRs?
 * Do these two classes of DMRs appear to be related to different functions?
+
+### BONUS CODE: Manhattan-like plot of differential methylation
+
+This code uses the 'DMdata' dataframe generated just after the differential methylation calculation step.
+
+```
+# modified from code by Daniel Roelfs:
+# https://danielroelfs.com/posts/how-i-create-manhattan-plots-using-ggplot/
+
+# add the cumulative coordinates so that we can display points from all chromosomes sequentially
+data_cumul <- DMdata |>
+  group_by(chr) |>
+  summarise(max_bp = max(start)) |>
+  mutate(bp_add = lag(cumsum(max_bp), default = 0)) |>
+  select(chr, bp_add)
+DMdata <- DMdata |>
+  inner_join(data_cumul, by = "chr") |>
+  mutate(bp_cum = start + bp_add)
+
+# set the points for the x axis (chromosome centres)
+axis_set <- DMdata |>
+  group_by(chr) |>
+  summarize(center = mean(bp_cum))
+
+# code the plot
+manhplot <- ggplot(subset(DMdata,result=="non_DM"), aes(
+  x = bp_cum, y = meth.diff,
+  color = as.factor(chr))) +
+  geom_hline(
+    yintercept = c(-25,25), color = "grey40",
+    linetype = "dashed") +
+  geom_point(alpha = 0.75) +
+  scale_x_continuous(
+    label = axis_set$chr,
+    breaks = axis_set$center) +
+  scale_color_manual(values = rep(c("black", "darkgrey"),
+    unique(length(axis_set$chr)))) +
+  scale_size_continuous(range = c(0.5, 3)) +
+  labs(x = NULL,y = "% methylation difference") +
+  theme_minimal() +
+  theme(legend.position = "none",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.text.x = element_text(angle = 60, size = 8, vjust = 0.5))+
+  geom_point(data=subset(DMdata,result=="hyper"),pch=21,mapping=aes(x = bp_cum, y = meth.diff),fill="red")+
+  geom_point(data=subset(DMdata,result=="hypo"),pch=21,mapping=aes(x = bp_cum, y = meth.diff),fill="blue")
+```
 
 ### OPTIONAL: GO term enrichment analysis
 
@@ -338,10 +424,7 @@ term2gene<-query_goterms_bp[c(2,1)]
 # the universe, a.k.a. background -> should be all the transcripts covered that also have some GO annotation
 
 # run the enricher() function
-enricher(gene = DM_promoters$feature.name,TERM2GENE = term2gene, TERM2NAME = term2name,universe = all_covered_transcripts,pAdjustMethod = "fdr", pvalueCutoff = 0.1)
-
-# How do the results differ between hypo- and hypermethylated genes?
-# Is anything enriched amongst promoters that are differentially methylated in both experimental and population comparisons?
+enricher(gene = DM_promoters,TERM2GENE = term2gene, TERM2NAME = term2name,universe = all_covered_transcripts,pAdjustMethod = "fdr", pvalueCutoff = 0.1)
 ```
 Appendix: Obtaining BED12 file of stickleback transcripts
 The stickleback V5 gff3 annotation was obtained (https://ftp.ensembl.org/pub/release-115/gff3/gasterosteus_aculeatus/) and converted it to BED12 format (for use with genomation) with the AGAT toolkit:
