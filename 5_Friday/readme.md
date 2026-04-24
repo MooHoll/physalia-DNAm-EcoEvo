@@ -59,7 +59,7 @@ for(i in seq_along(samples)){
 }
 ```
 
-* We also need a `.bed` file with regions that we're interested in, e.g. genes, exons, etc. There are lots of ways you can make these, here are a few lines of code that strip away parts of a .gff to leave only the bits we need: `chromosome`,`feature`,`start`,`end`,`gene_id`.
+* We also need a `.bed` file with regions that we're interested in, e.g. genes, exons, etc. There are lots of ways you can make these, here are a few lines of code that strip away parts of a .gff to leave only the bits we need: `chromosome`,`start`,`end`,`feature`,`gene_id`.
 
 ```
 cut -f 1,4,5,9 random_species.gff3 > random_species_annotation.bed
