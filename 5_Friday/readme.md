@@ -69,7 +69,7 @@ sed -i "s/;.*//g" random_species_annotation.bed
 ### Step 2: Calculate the weighted methylation level for all features and make a graph
 
 * Follow the `R` script: `weighted_meth_per_feature.R` using the files provided
-* Advanced: add in a binomial test before you calculate the weighted methylation per feature to reduce the C count to zero for non-methylated positions
+* Advanced: add in a binomial test before you calculate the weighted methylation per feature to reduce the C count to zero for non-methylated positions, see `bonus_stuff`
 
 *The files we will use are a subset of the actual files and so the final results won't be biologically meaningful.*
 
