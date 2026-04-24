@@ -74,7 +74,7 @@ sed -i "s/;.*//g" random_species_annotation.bed
 *The files we will use are a subset of the actual files and so the final results won't be biologically meaningful.*
 
 ## 2. Gene expression and DNA methylation relationships
-We will now explore how general genome-wide DNA methylation and gene expression correlate in our samples. We will also examine whether differentially methylated genes correspond to differentially expressed genes. These scripts could be useful for other kinds of data as well, such as correlations with ATAC or ChIP-Seq/CUT&Tag.
+We will now explore how general genome-wide DNA methylation and gene expression correlate in our samples. We will also examine whether differentially methylated genes correspond to differentially expressed genes. These scripts could be useful for other kinds of data as well, such as correlations with ATAC-Seq or ChIP-Seq/CUT&Tag.
 
 ### Step 1: Combine DNA methylation and gene expression matrices
 As you will likely produce slightly different looking dataframes, I didn't think it would be relevant to go through how I merge multiple dataframes in `R`. In case it's useful though, I have provided my raw files and the code for this in the `gene_exp_with_meth` folder.
