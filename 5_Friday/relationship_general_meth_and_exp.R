@@ -8,7 +8,6 @@ library(Hmisc)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(multcomp)
 
 ###---------------------------------------------------------------
 # Read in the data
@@ -74,16 +73,13 @@ ggplot(meth_exp_females, aes(x=weighted_meth, y=logFPKM))+
   xlim(0,1.0)
 
 
-# Run some simple stats to see if methylation levels predict gene expression level
-model1<-lm(FPKM ~ sex * weighted_meth, data=all_methylation_expression_data)
-model2<-lm(FPKM ~ sex + weighted_meth, data=all_methylation_expression_data)
-anova(model1,model2) # No interaction between sex and level of methylation
-summary.lm(model2) # Sex not significant but meth does predict exp (just about)
+# You could run some stats on this but it gets tricky with the zero-inflated methylation data
+# You could consider running a categorical methylated vs unmethylated
+# And then with methylation as a continuous variable for only methylated features
 
 ###---------------------------------------------------------------
-# The above could be the end of this analysis, the following graphs
-# are representing the same data but in different ways and are a 
-# personal preference
+# The following graphs are representing the same data but in different 
+# ways and are a personal preference
 ###---------------------------------------------------------------
 
 ###---------------------------------------------------------------
@@ -167,11 +163,11 @@ ggplot(all_methylation_expression_data, aes(x=plot_cat, y=logFPKM))+
 meth_exp_X <- all_methylation_expression_data[all_methylation_expression_data$chr=="DC3.0sc08",] #1428
 meth_exp_A <- all_methylation_expression_data[!all_methylation_expression_data$chr=="DC3.0sc08",] #22546
 
-# Scatters
+# Scatters (replace the data to plot for X or autosomes)
 meth_exp_males_X <- meth_exp_X[meth_exp_X$sex=="male",]
 meth_exp_males_A <- meth_exp_A[meth_exp_A$sex=="male",]
 
-ggplot(meth_exp_males_A, aes(x=weighted_meth, y=logFPKM))+
+ggplot(meth_exp_males_X, aes(x=weighted_meth, y=logFPKM))+
   geom_point(colour="#44AA99",size=2)+
   geom_smooth(method = "lm",size=2,colour="black")+
   xlab("Weighted Methylation")+
@@ -190,7 +186,7 @@ ggplot(meth_exp_males_A, aes(x=weighted_meth, y=logFPKM))+
 meth_exp_females_X <- meth_exp_X[meth_exp_X$sex=="female",]
 meth_exp_females_A <- meth_exp_A[meth_exp_A$sex=="female",]
 
-ggplot(meth_exp_females_A, aes(x=weighted_meth, y=logFPKM))+
+ggplot(meth_exp_females_X, aes(x=weighted_meth, y=logFPKM))+
   geom_point(colour="#DDCC77",size=2)+
   geom_smooth(method = "lm",size=2, colour="black")+
   xlab("Weighted Methylation")+
@@ -205,19 +201,6 @@ ggplot(meth_exp_females_A, aes(x=weighted_meth, y=logFPKM))+
         legend.text = element_text(size=20),
         legend.title = element_blank())+
   xlim(0,1.0)
-
-
-# Stats
-model1<-lm(FPKM~sex*weighted_meth, data=meth_exp_X)
-model2<-lm(FPKM~sex+weighted_meth, data=meth_exp_X)
-anova(model1,model2) # No interaction
-summary.lm(model2) # Nothing signif
-
-# Stats
-model1<-lm(FPKM~sex*weighted_meth, data=meth_exp_A)
-model2<-lm(FPKM~sex+weighted_meth, data=meth_exp_A)
-anova(model1,model2) # No interaction
-summary.lm(model2) # Sex not sig but meth exp is
 
 
 # Binned line graph
@@ -331,3 +314,10 @@ ggplot(meth_exp_A, aes(x=plot_cat, y=logFPKM))+
         plot.title=element_text(size = 20),
         legend.text = element_text(size=20),
         legend.title = element_blank())
+
+###---------------------------------------------------------------
+# Probably it is worth plotting the overall methylation level by chromosome to see what's happening with the X
+# How would you do this? (think weighted methylation across all features...)
+
+
+

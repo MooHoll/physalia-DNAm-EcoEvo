@@ -17,7 +17,7 @@ library(stringr)
 all_methylation_expression_data <- read_delim("all_methylation_expression_data.txt", 
                                               "\t", escape_double = FALSE, trim_ws = TRUE)
 
-# Calculate the differenece in weighted methylation between the sexes
+# Calculate the difference in weighted methylation between the sexes
 weighted_meth <- all_methylation_expression_data[,c(1,2,9)]
 weighted_meth <- weighted_meth[!duplicated(weighted_meth),]
 weighted_meth <- spread(weighted_meth, sex, weighted_meth)
@@ -30,7 +30,6 @@ all <- merge(all_methylation_expression_data, weighted_meth, by = "gene_id", all
 # Are there any genes which are both differentially expressed and differentially methylated?
 
 genes <- all[!(all$diff_exp=="no") & !(all$hypermeth_cat=="none"),] # 0
-
 
 # ---------------------------------------------------------------
 # Scatter plots of all differential data coloured by differential gene expression
@@ -94,8 +93,6 @@ ggplot(ordered, aes(x=meth_diff, y=logFC, colour=diff_meth_cat))+
   geom_hline(yintercept = -1.5)+
   xlim(-0.5,0.6)
 
-
-
 # ---------------------------------------------------------------
 # Look at the same data in violin plot format
 # ---------------------------------------------------------------
@@ -141,9 +138,8 @@ ggplot(all, aes(x=plot_cat, y=logFPKM))+
 all$sex <- as.factor(all$sex)
 all$hypermethylated <- as.factor(all$hypermethylated)
 
-model1<-lm(FPKM ~ sex * hypermethylated, data=all)
+model1<-lm(FPKM ~ sex * hypermethylated, data=all) # No sig interaction
 model2<-lm(FPKM ~ sex + hypermethylated, data=all)
-anova(model1,model2) # No sig interaction
 summary.lm(model2) # Nope
 
 # ---------------------------------------------------------------
@@ -182,7 +178,6 @@ ggplot(all, aes(x=plot_column, y=log_meth)) +
         legend.title = element_blank())
 
 # Stats
-model1<-lm(weighted_meth ~ sex * higher_cat, data=all)
+model1<-lm(weighted_meth ~ sex * higher_cat, data=all) # No sig interaction
 model2<-lm(weighted_meth ~ sex + higher_cat, data=all)
-anova(model1,model2) # No sig interaction
 summary.lm(model2) # Sig: differentially expressed genes have lower methylation than non-differentially expressed genes
