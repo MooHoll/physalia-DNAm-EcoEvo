@@ -115,13 +115,18 @@ for (i in seq(1,9)){
   getCoverageStats(tiles[[i]],plot=TRUE,both.strands=FALSE)}
 
 ```
-unite() will drop windows that are not covered in all samples
+We then want to collect windows with good representation across all or most samples.
+unite() will by default drop windows that are not covered in all samples, which is sensible if the sample size is low.
 ```
 # merge samples
-meth<-unite(tiles)
+meth<-unite(tiles, min.per.group = 3)
 # then, optionally - nullify objects we no longer need, to save memoty
 myobj<-NULL; filtered.myobj<-NULL; tiles<-NULL
 ```
+However if you have a slightly larger sample size, you may be happy to set 'min.per.group' to something slightly less than the group size.
+E.g., if you have N=10 per group, perhaps min.per.group = 8 would be sensible.
+This is equivalent to a missing data filter in a SNP analysis.
+
 sometimes we may want to remove chromosomes (e.g. sex chromosomes, organelles)
 ```
 # see which chromosomes are represented
@@ -229,6 +234,8 @@ write.table(data.frame(chr=subset(DMdata,result!="non_DM")$chr,
             file="DMRs.bed",row.names = F,col.names = F,quote = F,sep="\t")
 
 # note that we subtract 1 from start end coordinates, so that they become '0-based' coordinates (as per BED format)
+# also, it may be necessary to prevent large coordinate numbers from being written out as scienticif notation (e.g. 1e07), in which case you could set:
+# options(scipen=100)
 ```
 
 ### More visualisation
